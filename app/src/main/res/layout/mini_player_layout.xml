@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    tools:context=".Activity.MiniPlayActivity">
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/mini_player_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/controller_layout"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <include
+        android:id="@+id/navigation"
+        layout="@layout/navigation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/controller_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/design_default_color_secondary_variant"
+        app:layout_constraintBottom_toTopOf="@id/navigation">
+
+        <FrameLayout
+            android:id="@+id/line_divider_top"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#454545"
+            app:layout_constraintBottom_toTopOf="@+id/detail_and_video_layout" />
+
+        <LinearLayout
+            android:id="@+id/detail_and_video_layout"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/play_and_pause"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/video_layout"
+                android:name="com.example.MediaPlayer.Fragments.VideoViewFragment"
+                android:layout_width="130dp"
+                android:layout_height="match_parent"
+                tools:layout="@layout/video_view"></androidx.fragment.app.FragmentContainerView>
+
+            <LinearLayout
+                android:id="@+id/detail_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/video_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="middle"
+                    android:singleLine="true"
+                    android:text="Video name"
+                    android:textColor="@color/teal_200"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/artist_and_duration"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:text="artist - duration"
+                    android:textColor="#03A9F4"
+                    android:textSize="15dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/play_and_pause"
+            android:layout_width="40dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="20dp"
+            android:backgroundTint="@color/white"
+            android:backgroundTintMode="src_atop"
+            android:scaleType="fitCenter"
+            android:src="@drawable/pause_and_play_state"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/next"
+            app:layout_constraintTop_toTopOf="@id/detail_and_video_layout" />
+
+        <ImageView
+            android:id="@+id/next"
+            android:layout_width="40dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/selected_button_layout"
+            android:backgroundTint="@color/white"
+            android:backgroundTintMode="src_atop"
+            android:src="@android:drawable/ic_media_next"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/detail_and_video_layout" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

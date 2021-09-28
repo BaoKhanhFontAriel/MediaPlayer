@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="20sp"
+    android:layout_marginBottom="20dp">
+
+    <LinearLayout
+        android:id="@+id/top_panel"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/arrow"
+            android:layout_width="60dp"
+            android:layout_height="50dp"
+            android:background="@drawable/selected_button_layout"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="41dp"
+                android:layout_height="34dp"
+                android:src="@drawable/back_button" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/browse_by_artists"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:text="Browse by Artist"
+            android:textColor="@color/teal_700"
+            android:textSize="20sp" />
+
+
+    </LinearLayout>
+
+
+    <GridView
+        android:id="@+id/artist_gridview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/top_panel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="10dp"
+        android:numColumns="2">
+    </GridView>
+</androidx.constraintlayout.widget.ConstraintLayout>

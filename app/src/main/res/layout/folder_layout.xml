@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginStart="20sp"
+    android:layout_marginEnd="10dp"
+    android:layout_marginBottom="20dp">
+
+
+    <LinearLayout
+        android:id="@+id/top_panel"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/arrow"
+            android:layout_width="60dp"
+            android:layout_height="50dp"
+            android:background="@drawable/selected_button_layout"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="41dp"
+                android:layout_height="34dp"
+                android:src="@drawable/back_button" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/browse_by_folder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:text="Browse by folder"
+            android:textColor="@color/teal_700"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+
+    <GridView
+        android:id="@+id/folder_and_artist_gridview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="10dp"
+        android:numColumns="2"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/play_all_in_folder"
+        app:layout_constraintTop_toBottomOf="@+id/folder_name" />
+
+    <TextView
+        android:id="@+id/folder_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="middle"
+        android:singleLine="true"
+        android:text="Folder name"
+        android:textColor="@color/teal_200"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@+id/top_panel" />
+
+    <TextView
+        android:id="@+id/play_all_in_folder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/play_all_button_selector"
+        android:padding="5dp"
+        android:text="Play all in folders"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
