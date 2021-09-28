@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         getRepository();
 
-        IntentFilter intentFilter = new IntentFilter("com.example.videoplayer.MyService");
+        IntentFilter intentFilter = new IntentFilter("com.example.MediaPlayer.MyService");
         registerReceiver(broadcastReceiver, intentFilter);
 
         normalPlayerFragment = new NormalPlayerFragment();
@@ -134,6 +134,8 @@ public class MainActivity extends AppCompatActivity {
             GenreRepository.getInstance().getGenre(this);
             AudioArtistRepository.getInstance().getAllArtists(this);
             AlbumRepository.getInstance().getAllAlbums(this);
+            Log.d(TAG, "VideoRepository: " + VideoRepository.getInstance().getVideoList().size());
+            Log.d(TAG, "AudioRepository: " + AudioRepository.getInstance().getAudioList().size());
         }
     }
 
@@ -146,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
         playlistViewModel.getCurrentProcess().setValue(getSavedVideoProcess(playlistViewModel.getCurrentMediaEntry().getMediaName()));
         playlistViewModel.getIsPauseSelected().setValue(true);
     }
+
 
     public void onVideoCompleted() {
         Log.d(TAG, "onVideoCompleted: ");
@@ -386,16 +389,12 @@ public class MainActivity extends AppCompatActivity {
 
     public int getSavedVideoPosition() {
         sharedPreferences = getSharedPreferences("pref", MODE_PRIVATE);
-        int index = sharedPreferences.getInt(KEY_POSITION, 0);
-//        if (index == -1){
-//            return null;
-//        }
-        return index;
+        return sharedPreferences.getInt(KEY_POSITION, 0);
     }
 
     public List<MediaEntry> getSavedHistory() {
         sharedPreferences = getSharedPreferences("pref", MODE_PRIVATE);
-        String json = sharedPreferences.getString("video history", "");
+        String json = sharedPreferences.getString("video history", null);
         if (json != null) {
             Log.d(TAG, "json != null: ");
             Type collectionType = new TypeToken<List<MediaEntry>>() {

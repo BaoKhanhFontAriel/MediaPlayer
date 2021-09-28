@@ -3,8 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Documents/Android projects/MediaPlayer/app/src/main/res/layout/audio_fragment.xml" value="0.3546875" />
+        <entry key="..\:/Documents/Android projects/MediaPlayer/app/src/main/res/layout/audio_player_layout.xml" value="0.25" />
         <entry key="..\:/Documents/Android projects/MediaPlayer/app/src/main/res/layout/folder_layout.xml" value="0.19739583333333333" />
         <entry key="..\:/Documents/Android projects/MediaPlayer/app/src/main/res/layout/fragment_folder.xml" value="0.19739583333333333" />
+        <entry key="..\:/Documents/Android projects/MediaPlayer/app/src/main/res/layout/normal_layout.xml" value="0.3546875" />
+        <entry key="..\:/Documents/Android projects/MediaPlayer/app/src/main/res/layout/video_folder_grid_ui.xml" value="0.3546875" />
+        <entry key="..\:/Documents/Android projects/MediaPlayer/app/src/main/res/layout/video_fragment.xml" value="0.3546875" />
+        <entry key="..\:/Documents/Android projects/MediaPlayer/app/src/main/res/layout/video_view.xml" value="0.3546875" />
       </map>
     </option>
   </component>

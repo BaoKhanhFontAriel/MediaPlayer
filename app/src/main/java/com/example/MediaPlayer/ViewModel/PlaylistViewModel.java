@@ -38,10 +38,7 @@ public class PlaylistViewModel extends ViewModel {
     }
 
     public MediaEntry getCurrentMediaEntry(){
-        if (currentIndex.getValue() != -1) {
             return currentPlaylist.getValue().get(currentIndex.getValue());
-        }
-        return null;
     }
 
     public MutableLiveData<Boolean> getIsPauseSelected() {
