@@ -11,14 +11,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.MediaPlayer.Activity.MainActivity;
 import com.example.MediaPlayer.Adapter.TrackListAdapter;
 import com.example.MediaPlayer.Data.AudioRepository;
 import com.example.MediaPlayer.Data.MediaEntry;
 import com.example.MediaPlayer.R;
+import com.example.MediaPlayer.ViewModel.PlaylistViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -28,6 +31,7 @@ public class TrackFragment extends Fragment {
     RecyclerView recyclerView;
     TextView audioName;
     TrackListAdapter trackListAdapter;
+    PlaylistViewModel playlistViewModel;
 
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -41,7 +45,9 @@ public class TrackFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         setId(view);
         setupVideoRecycler(AudioRepository.getInstance().getAudioList());
+        playlistViewModel = new ViewModelProvider(requireActivity()).get(PlaylistViewModel.class);
     }
+
 
     private void setId(View view) {
         recyclerView = view.findViewById(R.id.playlist_recycler);
@@ -65,7 +71,15 @@ public class TrackFragment extends Fragment {
     TrackListAdapter.IEntryClicked onClickVideoInPlaylist = new TrackListAdapter.IEntryClicked() {
         @Override
         public void onItemClicked(int position) {
-//            playlistViewModel.getCurrentVideoIndex().setValue(position);
+            playlistViewModel.getIsPauseSelected().setValue(false);
+            playlistViewModel.getCurrentPlaylist().setValue(AudioRepository.getInstance().getAudioList());
+            playlistViewModel.getCurrentIndex().setValue(position);
+            SongPlayerFragment songPlayerFragment = new SongPlayerFragment();
+            ((MainActivity) getActivity()).getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.main_fragment, songPlayerFragment)
+                    .addToBackStack(null)
+                    .commit();
         }
     };
 

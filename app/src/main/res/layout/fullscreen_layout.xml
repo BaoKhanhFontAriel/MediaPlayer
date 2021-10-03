@@ -44,7 +44,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/button_panel"
-        android:name="com.example.MediaPlayer.Fragments.ButtonPanelFragment"
+        android:name="com.example.MediaPlayer.Fragments.VideoButtonPanelFragment"
         tools:layout="@layout/panel_bar_layout"
         android:layout_width="0dp"
         android:layout_height="50dp"

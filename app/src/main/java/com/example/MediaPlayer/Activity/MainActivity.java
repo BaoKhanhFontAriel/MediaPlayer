@@ -467,12 +467,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-
         backgroundIntent.putExtra(Utils.IS_PAUSE, playlistViewModel.getIsPauseSelected().getValue());
         backgroundIntent.putExtra(Utils.CURRENT_SHUFFLE_INDICES, shuffleIndices);
         backgroundIntent.putExtra(Utils.CURRENT_SHUFFLE_INDEX, currentShuffleIndex);
-        handler.postDelayed(() -> startService(backgroundIntent), 5);
-
+        if (!playlistViewModel.getIsPauseSelected().getValue()) {
+            handler.postDelayed(() -> startService(backgroundIntent), 5);
+        }
     }
 
     @Override

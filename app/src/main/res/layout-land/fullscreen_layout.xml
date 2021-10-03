@@ -54,7 +54,7 @@
         app:layout_constraintRight_toRightOf="@+id/video_layout"
         app:layout_constraintLeft_toLeftOf="@+id/video_layout"
         android:visibility="visible"
-        android:name="com.example.MediaPlayer.Fragments.ButtonPanelFragment"
+        android:name="com.example.MediaPlayer.Fragments.VideoButtonPanelFragment"
         tools:layout="@layout/panel_bar_layout">
     </androidx.fragment.app.FragmentContainerView>
 

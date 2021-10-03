@@ -68,19 +68,19 @@
         app:srcCompat="@drawable/playlist" />
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragmentContainerView2"
+        android:id="@+id/button_panel_layout"
         android:name="com.example.MediaPlayer.Fragments.SongButtonPanelFragment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="341dp"
+        android:layout_height="64dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/progress_bar"
+        app:layout_constraintStart_toStartOf="@+id/progress_bar"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.85"
         tools:layout="@layout/song_button_panel" />
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragmentContainerView"
+        android:id="@+id/progress_bar"
         android:name="com.example.MediaPlayer.Fragments.ProgressBarFragment"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

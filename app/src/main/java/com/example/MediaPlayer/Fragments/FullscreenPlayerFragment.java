@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 public class FullscreenPlayerFragment extends Fragment {
     private static final String TAG = "FullscreenFragment";
 
-    private ButtonPanelFragment buttonPanelFragment;
+    private VideoButtonPanelFragment buttonPanelFragment;
     private VideoViewFragment videoPlayerFragment;
     private ProgressBarFragment progressBarFragment;
     private TextView artistName;
@@ -58,7 +58,7 @@ public class FullscreenPlayerFragment extends Fragment {
 
         if (savedInstanceState == null) {
             Log.d(TAG, "create fragment: ");
-            buttonPanelFragment = (ButtonPanelFragment) getChildFragmentManager().findFragmentById(R.id.button_panel);
+            buttonPanelFragment = (VideoButtonPanelFragment) getChildFragmentManager().findFragmentById(R.id.button_panel);
             videoPlayerFragment = (VideoViewFragment) getChildFragmentManager().findFragmentById(R.id.video_layout);
             progressBarFragment = (ProgressBarFragment) getChildFragmentManager().findFragmentById(R.id.progress_bar);
 

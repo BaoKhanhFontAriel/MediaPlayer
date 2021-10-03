@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 public class NormalPlayerFragment extends Fragment {
     private static final String TAG = "NormalPlayerFragment";
 
-    private ButtonPanelFragment buttonPanelFragment;
+    private VideoButtonPanelFragment buttonPanelFragment;
     private PlaylistFragment playlistFragment;
     private VideoViewFragment videoViewFragment;
     private ProgressBarFragment progressBarFragment;
@@ -42,7 +42,7 @@ public class NormalPlayerFragment extends Fragment {
         View view = inflater.inflate(R.layout.normal_layout, container,false);
         if (savedInstanceState == null) {
             Log.d(TAG, "create fragment: ");
-            buttonPanelFragment = (ButtonPanelFragment) getChildFragmentManager().findFragmentById(R.id.button_panel);
+            buttonPanelFragment = (VideoButtonPanelFragment) getChildFragmentManager().findFragmentById(R.id.button_panel);
             videoViewFragment = (VideoViewFragment) getChildFragmentManager().findFragmentById(R.id.video_layout);
             playlistFragment = (PlaylistFragment) getChildFragmentManager().findFragmentById(R.id.playlist_view);
             progressBarFragment = (ProgressBarFragment) getChildFragmentManager().findFragmentById(R.id.progress_bar);
