@@ -29,10 +29,8 @@ public class VideoButtonPanelFragment extends BaseButtonPanelFragment {
     private ImageButton browseButton;
     private ImageButton fullscreenButton;
     private PlaylistViewModel playlistViewModel;
-    SharedPreferences sharedPreferences;
-    SharedPreferences.Editor editor;
     private static final String KEY_FULLSCREEN = "KEY_FULLSCREEN";
-
+    private static final String KEY_PAUSE = "KEY_PAUSE";
     public VideoButtonPanelFragment() {
         // Required empty public constructor
     }
@@ -103,26 +101,46 @@ public class VideoButtonPanelFragment extends BaseButtonPanelFragment {
         }
     }
 
-
+    @Override
     public void setUpViewModel() {
         playlistViewModel = new ViewModelProvider(requireActivity()).get(PlaylistViewModel.class);
 
         playlistViewModel.getIsFolderCreated().observe(getViewLifecycleOwner(), (isCreated) -> {
             browseButton.setEnabled(isCreated);
         });
+
+        playlistViewModel.getIsPauseSelected().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isPaused) {
+                VideoButtonPanelFragment.super.getEditor().putBoolean(KEY_PAUSE, isPaused);
+                VideoButtonPanelFragment.super.getEditor().apply();
+            }
+        });
     }
 
     @Override
     public void getSavedButtonPanel() {
         super.getSavedButtonPanel();
-        if (sharedPreferences.getBoolean(KEY_FULLSCREEN, false)) {
+        playlistViewModel.getIsPauseSelected().setValue(VideoButtonPanelFragment.super.getSharedPreferences().getBoolean(KEY_PAUSE, true));
+        if (VideoButtonPanelFragment.super.getSharedPreferences().getBoolean(KEY_FULLSCREEN, false)) {
             fullscreenButton.performClick();
         }
     }
 
+    @Override
     public void saveButtonPanel() {
-        Log.d(TAG, "saveButtonPanel: ");
-        editor.putBoolean(KEY_FULLSCREEN, fullscreenButton.isSelected());
-        editor.apply();
+        VideoButtonPanelFragment.super.getEditor().putBoolean(KEY_PAUSE, playlistViewModel.getIsPauseSelected().getValue());
+        VideoButtonPanelFragment.super.getEditor().putBoolean(KEY_FULLSCREEN, fullscreenButton.isSelected());
+        VideoButtonPanelFragment.super.getEditor().apply();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
     }
 }

@@ -13,6 +13,7 @@ import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -45,6 +46,9 @@ public class SongPlayerFragment extends Fragment {
     private SongButtonPanelFragment songButtonPanelFragment;
     private ProgressBarFragment progressBarFragment;
     private PlaylistFragment playlistFragment;
+    private ImageButton browse;
+    private ImageButton playlist;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -63,7 +67,8 @@ public class SongPlayerFragment extends Fragment {
         thumbnail = view.findViewById(R.id.audio_thumbnail);
         song_name = view.findViewById(R.id.song_name);
         artist = view.findViewById(R.id.song_artist);
-
+        browse = view.findViewById(R.id.browse_button);
+        playlist = view.findViewById(R.id.playlist_button);
 
         playlistViewModel = new ViewModelProvider(requireActivity()).get(PlaylistViewModel.class);
 
@@ -84,7 +89,6 @@ public class SongPlayerFragment extends Fragment {
                 try {
                     mediaPlayer.setDataSource(getContext(), Uri.parse(audioEntry.getUri()));
                     mediaPlayer.prepare();
-                    mediaPlayer.seekTo(((MainActivity) getActivity()).getSavedVideoProcess(audioEntry.getMediaName()));
                     mediaPlayer.start();
                     handler.post(watchProgress);
                 } catch (IOException e) {
@@ -124,6 +128,22 @@ public class SongPlayerFragment extends Fragment {
             ((MainActivity) getActivity()).saveVideoProcess(integer, playlistViewModel.getCurrentMediaEntry().getMediaName());
             bundle.putBoolean("playing", mediaPlayer.isPlaying());
             getParentFragmentManager().setFragmentResult("requestKey", bundle);
+        });
+
+        playlist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        browse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mediaPlayer.stop();
+                handler.removeCallbacks(watchProgress);
+                ((MainActivity) getActivity()).getSupportFragmentManager().popBackStack();
+            }
         });
     }
 

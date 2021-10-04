@@ -40,13 +40,14 @@ public class BaseButtonPanelFragment extends Fragment {
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
 
-    private static final String KEY_PAUSE = "KEY_PAUSE";
+
     private static final String KEY_PLAY_MODE = "KEY_PLAY_MODE";
-    private static final String KEY_FULLSCREEN = "KEY_FULLSCREEN";
+
     private static final String KEY_SHUFFLE = "KEY_SHUFFLE";
     private static final String KEY_REPEAT_BUTTON = "KEY_REPEAT_BUTTON";
     private Handler handler = new Handler(Looper.getMainLooper());
     private Bundle result = new Bundle();
+    private int repeatButtonMode = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -109,7 +110,11 @@ public class BaseButtonPanelFragment extends Fragment {
         });
 
         repeatButton.setOnClickListener(v -> {
-            setRepeatButton();
+            repeatButtonMode++;
+            if (repeatButtonMode > 2) {
+                repeatButtonMode = 0;
+            }
+            setRepeatButton(repeatButtonMode);
         });
     }
 
@@ -123,6 +128,14 @@ public class BaseButtonPanelFragment extends Fragment {
         prevButton = view.findViewById(getPrevButton());
         repeatButton = view.findViewById(getRepeatButton());
         shuffleButton = view.findViewById(getShuffleButton());
+    }
+
+    public SharedPreferences getSharedPreferences() {
+        return sharedPreferences;
+    }
+
+    public SharedPreferences.Editor getEditor() {
+        return editor;
     }
 
     public int getNextButton() {
@@ -178,18 +191,9 @@ public class BaseButtonPanelFragment extends Fragment {
     }
 
 
-    private int repeatButtonMode = 0;
-
     @SuppressLint("UseCompatLoadingForDrawables")
-    public void setRepeatButton() {
-        repeatButtonMode++;
-
-        if (repeatButtonMode > 2) {
-            repeatButtonMode = 0;
-        }
-
+    public void setRepeatButton(int repeatButtonMode) {
         switch (repeatButtonMode) {
-
             // none is selected
             case 0:
                 Utils.isRepeatEnabled = false;
@@ -199,7 +203,7 @@ public class BaseButtonPanelFragment extends Fragment {
                     Utils.playMode = Utils.PLAY_MODE.AUTO_NEXT;
                 }
                 repeatButton.setSelected(false);
-                repeatButton.setImageDrawable(((MainActivity) getActivity()).getDrawable(R.drawable.repeat_button));
+                repeatButton.setImageDrawable(((MainActivity) getActivity()).getDrawable(R.drawable.repeat_none));
                 return;
 
             // repeat all is selected
@@ -229,8 +233,6 @@ public class BaseButtonPanelFragment extends Fragment {
             @Override
             public void onChanged(Boolean isPaused) {
                 pauseButton.setSelected(isPaused);
-                editor.putBoolean(KEY_PAUSE, isPaused);
-                editor.apply();
             }
         });
 
@@ -242,41 +244,38 @@ public class BaseButtonPanelFragment extends Fragment {
 
     public void getSavedButtonPanel() {
         Log.d(TAG, "setUpButtonPanel: ");
-
-        playlistViewModel.getIsPauseSelected().setValue(sharedPreferences.getBoolean(KEY_PAUSE, true));
-
         Utils.playMode = Utils.PLAY_MODE.valueOf(sharedPreferences.getString(KEY_PLAY_MODE, "AUTO_NEXT"));
         repeatButtonMode = sharedPreferences.getInt(KEY_REPEAT_BUTTON, 0);
-
-        repeatButton.performClick();
-
-        playlistViewModel.getIsShuffleSelected().setValue(sharedPreferences.getBoolean(KEY_SHUFFLE, false));
+        setRepeatButton(repeatButtonMode);
+//        playlistViewModel.getIsShuffleSelected().setValue(sharedPreferences.getBoolean(KEY_SHUFFLE, false));
     }
 
     public void saveButtonPanel() {
         Log.d(TAG, "saveButtonPanel: ");
-
+        Log.d(TAG, "repeatButtonMode: " + repeatButtonMode);
         editor.putString(KEY_PLAY_MODE, Utils.playMode.toString());
         editor.putBoolean(KEY_SHUFFLE, playlistViewModel.getIsShuffleSelected().getValue());
-        editor.putInt(KEY_REPEAT_BUTTON, repeatButtonMode - 1);
-        editor.putBoolean(KEY_PAUSE, playlistViewModel.getIsPauseSelected().getValue());
+        editor.putInt(KEY_REPEAT_BUTTON, repeatButtonMode);
         editor.apply();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-//        getSavedButtonPanel();
+        getSavedButtonPanel();
     }
 
     @Override
     public void onPause() {
-        super.onPause();
+        Log.d(TAG, "onPause: ");
         saveButtonPanel();
+        super.onPause();
     }
 
     @Override
     public void onStop() {
+        Log.d(TAG, "onStop: ");
+        saveButtonPanel();
         super.onStop();
     }
 

@@ -52,7 +52,7 @@
                 android:name="com.example.MediaPlayer.Fragments.VideoViewFragment"
                 android:layout_width="130dp"
                 android:layout_height="match_parent"
-                tools:layout="@layout/video_view"></androidx.fragment.app.FragmentContainerView>
+                tools:layout="@layout/video_view" />
 
             <LinearLayout
                 android:id="@+id/detail_layout"

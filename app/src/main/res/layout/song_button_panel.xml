@@ -41,7 +41,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/next_song"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/shuffle_button" />
+        app:srcCompat="@drawable/shuffle_state" />
 
     <ImageButton
         android:id="@+id/prev_song"
