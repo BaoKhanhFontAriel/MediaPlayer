@@ -21,7 +21,7 @@ import com.example.MediaPlayer.ViewModel.PlaylistViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
-public class FullscreenPlayerFragment extends Fragment {
+public class FullscreenVideoPlayerFragment extends Fragment {
     private static final String TAG = "FullscreenFragment";
 
     private VideoButtonPanelFragment buttonPanelFragment;
@@ -33,7 +33,7 @@ public class FullscreenPlayerFragment extends Fragment {
     private PlaylistViewModel playlistViewModel;
     Handler handler = new Handler(Looper.getMainLooper());
 
-    public FullscreenPlayerFragment() {
+    public FullscreenVideoPlayerFragment() {
     }
 
     @Override

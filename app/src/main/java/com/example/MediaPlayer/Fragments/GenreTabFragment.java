@@ -5,40 +5,29 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.MediaPlayer.Activity.MainActivity;
 import com.example.MediaPlayer.Adapter.BaseListAdapter;
-import com.example.MediaPlayer.Adapter.VideoListAdapter;
-import com.example.MediaPlayer.Data.VideoRepository;
+import com.example.MediaPlayer.Adapter.GenreListAdapter;
+import com.example.MediaPlayer.Data.GenreRepository;
 import com.example.MediaPlayer.R;
-import com.example.MediaPlayer.Data.MediaEntry;
-import com.example.MediaPlayer.ViewModel.PlaylistViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
+public class GenreTabFragment extends Fragment {
+    public static final String ARG_OBJECT = "object";
 
-public class VideoFragment extends Fragment {
-    private PlaylistFragment playlistFragment;
-    private PlaylistViewModel playlistViewModel;
-    RecyclerView recyclerView;
-
-    @Override
-    public void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (savedInstanceState == null) {
-            playlistFragment = new PlaylistFragment();
-        }
-    }
+    private TextView genre_title;
+    private TextView numbers_of_songs;
+    private RecyclerView recyclerView;
 
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -50,17 +39,19 @@ public class VideoFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        playlistViewModel = new ViewModelProvider(getActivity()).get(PlaylistViewModel.class);
         setId(view);
-        setUpRecyclerView();
+        setRecyclerView();
     }
 
-    public void setId(View view) {
+    private void setId(View view) {
+        genre_title = view.findViewById(R.id.genre);
+        numbers_of_songs = view.findViewById(R.id.number_of_songs);
         recyclerView = view.findViewById(R.id.playlist_recycler);
     }
 
-    public void setUpRecyclerView() {
-        VideoListAdapter adapter = new VideoListAdapter((ArrayList<MediaEntry>) VideoRepository.getInstance().getVideoList(), onClickVideoInPlaylist, getContext());
+    private void setRecyclerView() {
+        GenreListAdapter adapter = new GenreListAdapter(GenreRepository.getInstance().getGenreList(), clicked, getActivity());
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
 
         DividerItemDecoration horizontalDecoration = new DividerItemDecoration(recyclerView.getContext(),
@@ -68,13 +59,11 @@ public class VideoFragment extends Fragment {
         Drawable horizontalDivider = ContextCompat.getDrawable(recyclerView.getContext(), R.drawable.horizontal_divider);
         horizontalDecoration.setDrawable(horizontalDivider);
         recyclerView.addItemDecoration(horizontalDecoration);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
     }
 
-    BaseListAdapter.IEntryClicked onClickVideoInPlaylist = position -> {
-        playlistViewModel.getCurrentPlaylist().setValue(VideoRepository.getInstance().getVideoList());
-        playlistViewModel.getCurrentIndex().setValue(position);
-        ((MainActivity) getActivity()).enterVideoPlayer();
+    BaseListAdapter.IEntryClicked clicked = position -> {
+
     };
 }

@@ -11,23 +11,27 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.MediaPlayer.Adapter.BaseListAdapter;
-import com.example.MediaPlayer.Adapter.GenreListAdapter;
-import com.example.MediaPlayer.Data.GenreRepository;
+import com.example.MediaPlayer.Activity.MainActivity;
+import com.example.MediaPlayer.Adapter.TrackListAdapter;
+import com.example.MediaPlayer.Data.AudioRepository;
+import com.example.MediaPlayer.Data.MediaEntry;
 import com.example.MediaPlayer.R;
+import com.example.MediaPlayer.ViewModel.PlaylistViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
-public class GenreFragment extends Fragment {
-    public static final String ARG_OBJECT = "object";
+import java.util.ArrayList;
 
-    private TextView genre_title;
-    private TextView numbers_of_songs;
-    private RecyclerView recyclerView;
+public class AudioTrackTabFragment extends Fragment {
+    RecyclerView recyclerView;
+    TextView audioName;
+    TrackListAdapter trackListAdapter;
+    PlaylistViewModel playlistViewModel;
 
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -40,30 +44,43 @@ public class GenreFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setId(view);
-        setRecyclerView();
+        setupVideoRecycler(AudioRepository.getInstance().getAudioList());
+        playlistViewModel = new ViewModelProvider(requireActivity()).get(PlaylistViewModel.class);
     }
+
 
     private void setId(View view) {
-        genre_title = view.findViewById(R.id.genre);
-        numbers_of_songs = view.findViewById(R.id.number_of_songs);
         recyclerView = view.findViewById(R.id.playlist_recycler);
+        audioName = view.findViewById(R.id.video_name);
+//        playlistTitle = view.findViewById(R.id.playlist_title);
+
     }
 
-    private void setRecyclerView() {
-        GenreListAdapter adapter = new GenreListAdapter(GenreRepository.getInstance().getGenreList(), clicked, getActivity());
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(adapter);
+    public void setupVideoRecycler(ArrayList<MediaEntry> audioEntries) {
+        trackListAdapter = new TrackListAdapter(audioEntries, onClickVideoInPlaylist, recyclerView.getContext());
+        recyclerView.setAdapter(trackListAdapter);
 
         DividerItemDecoration horizontalDecoration = new DividerItemDecoration(recyclerView.getContext(),
                 DividerItemDecoration.VERTICAL);
         Drawable horizontalDivider = ContextCompat.getDrawable(recyclerView.getContext(), R.drawable.horizontal_divider);
         horizontalDecoration.setDrawable(horizontalDivider);
         recyclerView.addItemDecoration(horizontalDecoration);
-
         recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
     }
 
-    BaseListAdapter.IEntryClicked clicked = position -> {
-
+    TrackListAdapter.IEntryClicked onClickVideoInPlaylist = new TrackListAdapter.IEntryClicked() {
+        @Override
+        public void onItemClicked(int position) {
+            playlistViewModel.getIsPauseSelected().setValue(false);
+            playlistViewModel.getCurrentPlaylist().setValue(AudioRepository.getInstance().getAudioList());
+            playlistViewModel.getCurrentIndex().setValue(position);
+            SongPlayerFragment songPlayerFragment = new SongPlayerFragment();
+            ((MainActivity) getActivity()).getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.main_fragment, songPlayerFragment)
+                    .addToBackStack(null)
+                    .commit();
+        }
     };
+
 }

@@ -30,7 +30,7 @@ import com.google.android.material.navigation.NavigationBarView;
 
 import org.jetbrains.annotations.NotNull;
 
-public class MiniPlayerFragment extends Fragment {
+public class MainLayoutFragment extends Fragment {
     public static String TAG = "MiniPlayerFragment";
 
     private VideoViewFragment video_layout;
@@ -44,9 +44,9 @@ public class MiniPlayerFragment extends Fragment {
     private VideoView videoView;
     private LinearLayout arrow;
     private TextView artistName;
-    private BrowseFragment fragmentBrowse;
-    private VideoFragment videoFragment;
-    private AudioFragment audioFragment;
+    private BrowseTabFragment fragmentBrowse;
+    private VideoTabFragment videoFragment;
+    private AudioTabFragment audioFragment;
 
 
     SharedPreferences sharedPreferences;
@@ -55,7 +55,7 @@ public class MiniPlayerFragment extends Fragment {
 
     private static final String KEY_PAUSE = "KEY_PAUSE";
 
-    public MiniPlayerFragment() {
+    public MainLayoutFragment() {
     }
 
     @Override
@@ -67,14 +67,14 @@ public class MiniPlayerFragment extends Fragment {
     @org.jetbrains.annotations.Nullable
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.mini_player_layout, container, false);
+        View view = inflater.inflate(R.layout.main_app_layout, container, false);
         sharedPreferences = ((MainActivity) getActivity()).getSharedPreferences("pref", MainActivity.MODE_PRIVATE);
         editor = sharedPreferences.edit();
 
         if (savedInstanceState == null) {
-            fragmentBrowse = new BrowseFragment();
-            audioFragment = new AudioFragment();
-            videoFragment = new VideoFragment();
+            fragmentBrowse = new BrowseTabFragment();
+            audioFragment = new AudioTabFragment();
+            videoFragment = new VideoTabFragment();
             setUpNavigation(view);
 
 //            getChildFragmentManager().beginTransaction()
@@ -88,55 +88,55 @@ public class MiniPlayerFragment extends Fragment {
 
         playlistViewModel = new ViewModelProvider(requireActivity()).get(PlaylistViewModel.class);
 
-        playlistViewModel.getCurrentIndex().observe(getViewLifecycleOwner(), new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer integer) {
-                Log.d(TAG, "getCurrentVideoIndex: ");
-                if (integer == -1){
-                    detail_and_video_layout.setVisibility(View.GONE);
-                }
-                else {
-                    detail_and_video_layout.setVisibility(View.VISIBLE);
-                    MediaEntry videoEntry = playlistViewModel.getCurrentMediaEntry();
-                    video_name.setText(videoEntry.getMediaName());
-                    artistName.setText(videoEntry.getArtistName());
-                }
-            }
-        });
+//        playlistViewModel.getCurrentIndex().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+//            @Override
+//            public void onChanged(Integer integer) {
+//                Log.d(TAG, "getCurrentVideoIndex: ");
+//                if (integer == -1){
+//                    detail_and_video_layout.setVisibility(View.GONE);
+//                }
+//                else {
+////                    detail_and_video_layout.setVisibility(View.VISIBLE);
+//                    MediaEntry videoEntry = playlistViewModel.getCurrentMediaEntry();
+//                    video_name.setText(videoEntry.getMediaName());
+//                    artistName.setText(videoEntry.getArtistName());
+//                }
+//            }
+//        });
 
-        playlistViewModel.getIsPauseSelected().observe(getViewLifecycleOwner(), (isSelected) -> {
-            pause_button.setSelected(isSelected);
-            editor.putBoolean(KEY_PAUSE, isSelected);
-            editor.apply();
-        });
+//        playlistViewModel.getIsPauseSelected().observe(getViewLifecycleOwner(), (isSelected) -> {
+//            pause_button.setSelected(isSelected);
+//            editor.putBoolean(KEY_PAUSE, isSelected);
+//            editor.apply();
+//        });
+//
+//        playlistViewModel.getIsVideoClicked().observe(getViewLifecycleOwner(), (isClicked) -> {
+//            Log.d(TAG, "getIsVideoClicked: " + isClicked);
+//            if (isClicked) {
+//                ((MainActivity) getActivity()).enterVideoPlayer();
+//            }
+//        });
 
-        playlistViewModel.getIsVideoClicked().observe(getViewLifecycleOwner(), (isClicked) -> {
-            Log.d(TAG, "getIsVideoClicked: " + isClicked);
-            if (isClicked) {
-                ((MainActivity) getActivity()).enterVideoPlayer();
-            }
-        });
+//        pause_button.setOnClickListener(v -> {
+//            playlistViewModel.getIsPauseSelected().setValue(!pause_button.isSelected());
+//        });
 
-        pause_button.setOnClickListener(v -> {
-            playlistViewModel.getIsPauseSelected().setValue(!pause_button.isSelected());
-        });
-
-        detail_and_video_layout.setOnClickListener(v -> {
-            Log.d(TAG, "backToNormalPlayer: ");
-            onBackFromMiniPlayer();
-        });
+//        detail_and_video_layout.setOnClickListener(v -> {
+//            Log.d(TAG, "backToNormalPlayer: ");
+//            onBackFromMiniPlayer();
+//        });
 
 
 
-        next_button.setOnClickListener(v -> {
-
-            if (playlistViewModel.getIsShuffleSelected().getValue()) {
-                ((MainActivity) getActivity()).playNextShuffleVideo();
-                return;
-            }
-
-            ((MainActivity) getActivity()).playNextVideo();
-        });
+//        next_button.setOnClickListener(v -> {
+//
+//            if (playlistViewModel.getIsShuffleSelected().getValue()) {
+//                ((MainActivity) getActivity()).playNextShuffleVideo();
+//                return;
+//            }
+//
+//            ((MainActivity) getActivity()).playNextVideo();
+//        });
 
 
         return view;

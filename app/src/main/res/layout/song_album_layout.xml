@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/album_thumbnail"
+        android:layout_width="match_parent"
+        android:layout_height="302dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/artist_name_album"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="20dp"
+        android:text="Author"
+        android:textSize="26dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/album_thumbnail" />
+
+    <Button
+        android:id="@+id/play_all_album"
+        android:layout_width="160dp"
+        android:layout_height="54dp"
+        android:layout_marginTop="64dp"
+        android:backgroundTint="#FFFFFF"
+        android:backgroundTintMode="add"
+        android:fontFamily="sans-serif-black"
+        android:text="Button"
+        android:textColor="#009688"
+        app:cornerRadius="5dp"
+        app:layout_constraintEnd_toStartOf="@+id/shuffle_button_album"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/artist_name_album"
+        app:layout_constraintTop_toBottomOf="@+id/album_thumbnail"
+        app:strokeColor="#009688"
+        app:strokeWidth="2dp"
+        tools:text="Play All" />
+
+    <Button
+        android:id="@+id/shuffle_button_album"
+        android:layout_width="160dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="28dp"
+        android:backgroundTint="#009688"
+        android:text="Shuffle"
+        android:textAllCaps="true"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="@+id/play_all_album"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/play_all_album"
+        app:layout_constraintVertical_bias="1.0"
+        app:strokeColor="#009688"
+        app:strokeWidth="2dp" />
+
+    <TextView
+        android:id="@+id/song_name_album"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="Song"
+        android:textSize="28dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/play_all_album"
+        app:layout_constraintTop_toBottomOf="@+id/play_all_album" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview_album"
+        android:layout_width="0dp"
+        android:layout_height="191dp"
+        android:layout_marginBottom="52dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/shuffle_button_album"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/play_all_album" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

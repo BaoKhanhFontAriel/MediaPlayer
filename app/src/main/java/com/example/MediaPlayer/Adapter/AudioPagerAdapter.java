@@ -4,10 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.MediaPlayer.Fragments.AlbumFragment;
+import com.example.MediaPlayer.Fragments.AlbumTabFragment;
 import com.example.MediaPlayer.Fragments.ArtistFragment;
-import com.example.MediaPlayer.Fragments.GenreFragment;
-import com.example.MediaPlayer.Fragments.TrackFragment;
+import com.example.MediaPlayer.Fragments.GenreTabFragment;
+import com.example.MediaPlayer.Fragments.AudioTrackTabFragment;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -22,11 +22,11 @@ public class AudioPagerAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         switch (position){
-            case 1: return new AlbumFragment();
+            case 1: return new AlbumTabFragment();
             case 2: return new ArtistFragment();
-            case 3: return new GenreFragment();
+            case 3: return new GenreTabFragment();
         }
-        return new TrackFragment();
+        return new AudioTrackTabFragment();
     }
 
     @Override

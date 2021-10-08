@@ -17,7 +17,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 import org.jetbrains.annotations.NotNull;
 
-public class AudioFragment extends Fragment{
+public class AudioTabFragment extends Fragment{
     AudioPagerAdapter audioPagerAdapter;
     private ViewPager2 viewPager2;
     private String[] tabTitle = {"TRACK", "ALBUM", "ARTIST", "GENRE"};
@@ -26,7 +26,7 @@ public class AudioFragment extends Fragment{
     @org.jetbrains.annotations.Nullable
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.audio_fragment, container, false);
+        return inflater.inflate(R.layout.audio_tab_fragment, container, false);
     }
 
     @Override

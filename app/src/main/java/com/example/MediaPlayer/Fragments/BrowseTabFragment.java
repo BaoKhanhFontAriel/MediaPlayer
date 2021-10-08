@@ -26,7 +26,7 @@ import com.example.MediaPlayer.ViewModel.PlaylistViewModel;
 
 import java.util.ArrayList;
 
-public class BrowseFragment extends Fragment{
+public class BrowseTabFragment extends Fragment{
     public static final String TAG = "BrowseActivity";
 
     private LinearLayout backArrow;
@@ -43,7 +43,7 @@ public class BrowseFragment extends Fragment{
     private Handler handler;
 
 
-    public BrowseFragment() {
+    public BrowseTabFragment() {
         // Required empty public constructor
     }
 
@@ -60,11 +60,11 @@ public class BrowseFragment extends Fragment{
         playlistViewModel = new ViewModelProvider(requireActivity()).get(PlaylistViewModel.class);
 
         folder_layout.setOnClickListener(v -> {
-          ((MiniPlayerFragment) getParentFragment()).switchToFragment(new FolderFragment());
+          ((MainLayoutFragment) getParentFragment()).switchToFragment(new FolderTabFragment());
         });
 
         artist_layout.setOnClickListener(v -> {
-            ((MiniPlayerFragment) getParentFragment()).switchToFragment(new ArtistFragment());
+            ((MainLayoutFragment) getParentFragment()).switchToFragment(new ArtistFragment());
         });
 
         return view;
@@ -116,7 +116,7 @@ public class BrowseFragment extends Fragment{
         }
 
         ((MainActivity) getActivity()).getVideo(videoPosition);
-        ((MiniPlayerFragment) getParentFragment()).enterVideoPlayer();
+        ((MainLayoutFragment) getParentFragment()).enterVideoPlayer();
     };
 
     public LinearLayout getArrow(){

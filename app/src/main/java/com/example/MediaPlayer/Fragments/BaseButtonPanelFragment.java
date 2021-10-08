@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,19 +31,18 @@ public class BaseButtonPanelFragment extends Fragment {
     private ImageButton prevButton;
     private ImageButton shuffleButton;
     private ImageButton repeatButton;
+    private ImageButton browseButton;
+    private ImageButton playlistButton;
+    private ImageButton fullscreenButton;
     private LinearLayout buttonPanelLayout;
-    private int fragmentLayout;
-
     private PlaylistViewModel playlistViewModel;
-
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
-
-
     private static final String KEY_PLAY_MODE = "KEY_PLAY_MODE";
-
     private static final String KEY_SHUFFLE = "KEY_SHUFFLE";
     private static final String KEY_REPEAT_BUTTON = "KEY_REPEAT_BUTTON";
+    private static final String KEY_FULLSCREEN = "KEY_FULLSCREEN";
+    private static final String KEY_PAUSE = "KEY_PAUSE";
     private Handler handler = new Handler(Looper.getMainLooper());
     private Bundle result = new Bundle();
     private int repeatButtonMode = 0;
@@ -65,50 +63,51 @@ public class BaseButtonPanelFragment extends Fragment {
     }
 
     public int getLayout(){
-        return fragmentLayout;
+        return 0;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        setSharedPreferences();
         setId(view);
         setUpViewModel();
-        setupButtonListener();
+        setUpButtonListener();
         getSavedButtonPanel();
     }
 
-    public void setupButtonListener(){
+    public void setUpButtonListener(){
 
+    }
+
+    public void setupPauseButtonListener(){
         pauseButton.setOnClickListener(v -> {
             pauseButton.setSelected(!pauseButton.isSelected());
             playlistViewModel.getIsPauseSelected().setValue(pauseButton.isSelected());
         });
+    }
 
+    public void setupNextButtonListener(){
         nextButton.setOnClickListener(v -> {
             Log.d(TAG, "onCreate: next");
-
-            if (shuffleButton.isSelected()) {
-                ((MainActivity) getActivity()).playNextShuffleVideo();
-                return;
-            }
-            ((MainActivity) getActivity()).playNextVideo();
+            setUpNextButton();
         });
+    }
 
+    public void setupPrevButtonListener(){
         prevButton.setOnClickListener(v -> {
             Log.d(TAG, "onCreate: prev");
-            if (shuffleButton.isSelected()) {
-                ((MainActivity) getActivity()).playPrevShuffleVideo();
-                return;
-            }
-            ((MainActivity) getActivity()).playPrevVideo();
+            setUpPrevButton();
         });
-
+    }
+    public void setupShuffleButtonListener(){
         shuffleButton.setOnClickListener(v -> {
             shuffleButton.setSelected(!shuffleButton.isSelected());
             playlistViewModel.getIsShuffleSelected().setValue(shuffleButton.isSelected());
         });
-
+    }
+    public void setupRepeatButtonListener(){
         repeatButton.setOnClickListener(v -> {
             repeatButtonMode++;
             if (repeatButtonMode > 2) {
@@ -118,48 +117,67 @@ public class BaseButtonPanelFragment extends Fragment {
         });
     }
 
+    public void setUpBrowseButtonListener(){
+        browseButton.setOnClickListener(v -> {
+            ((MainActivity) getActivity()).backToMiniPlayer();
+        });
+    }
+
+    public void setUpFullscreenButtonListener(){
+        fullscreenButton.setOnClickListener(v -> {
+            setFullscreenButton();
+        });
+    }
+
+    public void setSharedPreferences(){
+        sharedPreferences = getActivity().getSharedPreferences("pref", ((MainActivity) getActivity()).MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+    }
+
     public void setId(View view) {
         Log.d(TAG, "setId: ");
-        sharedPreferences = ((MainActivity) getActivity()).getSharedPreferences("pref", ((MainActivity) getActivity()).MODE_PRIVATE);
-        editor = sharedPreferences.edit();
-        buttonPanelLayout = view.findViewById(getButtonPanelLayout());
-        pauseButton = view.findViewById(getPauseButton());
-        nextButton = view.findViewById(getNextButton());
-        prevButton = view.findViewById(getPrevButton());
-        repeatButton = view.findViewById(getRepeatButton());
-        shuffleButton = view.findViewById(getShuffleButton());
+
     }
 
-    public SharedPreferences getSharedPreferences() {
-        return sharedPreferences;
+    public void setButtonPanelLayout(int id, View view){
+        buttonPanelLayout = view.findViewById(id);
     }
 
-    public SharedPreferences.Editor getEditor() {
-        return editor;
+    public void setFullscreenButton(int id, View view){
+        fullscreenButton = view.findViewById(id);
     }
 
-    public int getNextButton() {
-        return 0;
+    public void setBrowseButton(int id, View view){
+        browseButton = view.findViewById(id);
+        browseButton.setEnabled(false);
     }
 
-    public int getPrevButton() {
-        return 0;
+    public void setNextButton(int id, View view){
+        nextButton = view.findViewById(id);
     }
 
-    public int getPauseButton() {
-        return 0;
+    public void setPrevButton(int id, View view){
+        prevButton = view.findViewById(id);
+    }
+    public void setPauseButton(int id, View view){
+        pauseButton = view.findViewById(id);
+    }
+    public void setShuffleButton(int id, View view){
+        shuffleButton = view.findViewById(id);
+    }
+    public void setRepeatButton(int id, View view){
+        repeatButton = view.findViewById(id);
     }
 
-    public int getRepeatButton() {
-        return 0;
-    }
 
-    public int getShuffleButton() {
-        return 0;
-    }
-
-    public int getButtonPanelLayout() {
-        return 0;
+    public void setFullscreenButton() {
+        fullscreenButton.setSelected(!fullscreenButton.isSelected());
+        Log.d(TAG, "setFullscreenButton: " + fullscreenButton.isSelected());
+        if (fullscreenButton.isSelected()) {
+            ((MainActivity) getActivity()).enterFullscreen();
+        } else {
+            ((MainActivity) getActivity()).enterVideoPlayer();
+        }
     }
 
     public void setShuffleButton() {
@@ -189,7 +207,6 @@ public class BaseButtonPanelFragment extends Fragment {
             }
         });
     }
-
 
     @SuppressLint("UseCompatLoadingForDrawables")
     public void setRepeatButton(int repeatButtonMode) {
@@ -222,32 +239,65 @@ public class BaseButtonPanelFragment extends Fragment {
         }
     }
 
+    public void setUpPrevButton(){
+        if (playlistViewModel.getIsShuffleSelected().getValue()) {
+            ((MainActivity) getActivity()).playPrevShuffleVideo();
+            return;
+        }
+        ((MainActivity) getActivity()).playPrevVideo();
+    }
+
+    public void setUpNextButton(){
+        if (playlistViewModel.getIsShuffleSelected().getValue()) {
+            ((MainActivity) getActivity()).playNextShuffleVideo();
+            return;
+        }
+        ((MainActivity) getActivity()).playNextVideo();
+    }
+
+
     public void setUpViewModel() {
         playlistViewModel = new ViewModelProvider(requireActivity()).get(PlaylistViewModel.class);
+    }
 
+    public void observePause(){
         playlistViewModel.getCurrentIndex().observe(getViewLifecycleOwner(), position -> {
             pauseButton.setSelected(false);
         });
 
+    }
+
+    public void observeShuffle(){
+        playlistViewModel.getIsShuffleSelected().observe(getViewLifecycleOwner(), (isSelected) -> {
+            setShuffleButton();
+        });
+    }
+
+    public void observeBrowse(){
+        playlistViewModel.getIsFolderCreated().observe(getViewLifecycleOwner(), (isCreated) -> {
+            browseButton.setEnabled(isCreated);
+        });
+    }
+
+    public void observeFullscreen(){
         playlistViewModel.getIsPauseSelected().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean isPaused) {
                 pauseButton.setSelected(isPaused);
             }
         });
-
-        playlistViewModel.getIsShuffleSelected().observe(getViewLifecycleOwner(), (isSelected) -> {
-            setShuffleButton();
-        });
     }
-
 
     public void getSavedButtonPanel() {
         Log.d(TAG, "setUpButtonPanel: ");
         Utils.playMode = Utils.PLAY_MODE.valueOf(sharedPreferences.getString(KEY_PLAY_MODE, "AUTO_NEXT"));
         repeatButtonMode = sharedPreferences.getInt(KEY_REPEAT_BUTTON, 0);
         setRepeatButton(repeatButtonMode);
-//        playlistViewModel.getIsShuffleSelected().setValue(sharedPreferences.getBoolean(KEY_SHUFFLE, false));
+        playlistViewModel.getIsPauseSelected().setValue(sharedPreferences.getBoolean(KEY_PAUSE, true));
+        if (sharedPreferences.getBoolean(KEY_FULLSCREEN, false)) {
+            fullscreenButton.performClick();
+        }
+        playlistViewModel.getIsShuffleSelected().setValue(sharedPreferences.getBoolean(KEY_SHUFFLE, false));
     }
 
     public void saveButtonPanel() {
@@ -256,26 +306,28 @@ public class BaseButtonPanelFragment extends Fragment {
         editor.putString(KEY_PLAY_MODE, Utils.playMode.toString());
         editor.putBoolean(KEY_SHUFFLE, playlistViewModel.getIsShuffleSelected().getValue());
         editor.putInt(KEY_REPEAT_BUTTON, repeatButtonMode);
+        editor.putBoolean(KEY_PAUSE, playlistViewModel.getIsPauseSelected().getValue());
+        editor.putBoolean(KEY_FULLSCREEN, fullscreenButton.isSelected());
         editor.apply();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        getSavedButtonPanel();
+//        getSavedButtonPanel();
     }
 
     @Override
     public void onPause() {
         Log.d(TAG, "onPause: ");
-        saveButtonPanel();
+//        saveButtonPanel();
         super.onPause();
     }
 
     @Override
     public void onStop() {
         Log.d(TAG, "onStop: ");
-        saveButtonPanel();
+//        saveButtonPanel();
         super.onStop();
     }
 

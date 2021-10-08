@@ -2,6 +2,7 @@ package com.example.MediaPlayer.Fragments;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,32 +21,29 @@ public class SongButtonPanelFragment extends BaseButtonPanelFragment {
     }
 
     @Override
-    public int getNextButton() {
-        return R.id.next_song;
+    public void setId(View view) {
+        Log.d(TAG, "setId: ");
+        super.setButtonPanelLayout(R.id.button_panel_layout, view);
+        super.setPauseButton(R.id.pause_song, view);
+        super.setNextButton(R.id.next_song, view);
+        super.setPrevButton(R.id.prev_song, view);
+        super.setShuffleButton(R.id.shuffle_song, view);
+        super.setRepeatButton(R.id.repeat_song, view);
     }
 
     @Override
-    public int getPrevButton() {
-        return R.id.prev_song;
+    public void setUpButtonListener() {
+        super.setupPauseButtonListener();
+        super.setupPrevButtonListener();
+        super.setupNextButtonListener();
+        super.setupShuffleButtonListener();
+        super.setupRepeatButtonListener();
     }
 
     @Override
-    public int getPauseButton() {
-        return R.id.pause_song;
-    }
-
-    @Override
-    public int getShuffleButton() {
-        return R.id.shuffle_song;
-    }
-
-    @Override
-    public int getRepeatButton() {
-        return R.id.repeat_song;
-    }
-
-    @Override
-    public int getButtonPanelLayout() {
-        return R.id.button_panel_layout;
+    public void setUpViewModel() {
+        super.setUpViewModel();
+        super.observePause();
+        super.observeShuffle();
     }
 }

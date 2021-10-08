@@ -23,7 +23,7 @@ import com.example.MediaPlayer.R;
 
 import java.util.ArrayList;
 
-public class FolderFragment extends Fragment implements AdapterView.OnItemClickListener{
+public class FolderTabFragment extends Fragment implements AdapterView.OnItemClickListener{
     private static String TAG = "FolderFragment";
 
     private TextView browse_by_folder;
@@ -71,7 +71,7 @@ public class FolderFragment extends Fragment implements AdapterView.OnItemClickL
         if (selected_folder.getVideoChildren() != null) {
             ArrayList<Integer> videoPositions = getVideoIndexInFolder(selected_folder);
             ((MainActivity) getActivity()).getPLayList(videoPositions);
-            ((MiniPlayerFragment) getParentFragment()).onBackFromMiniPlayer();
+            ((MainLayoutFragment) getParentFragment()).onBackFromMiniPlayer();
         }
     }
 
@@ -138,7 +138,7 @@ public class FolderFragment extends Fragment implements AdapterView.OnItemClickL
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (adapterData.get(position).isLeaf()) {
             ((MainActivity) getActivity()).getVideo(adapterData.get(position).getVideoPosition());
-            ((MiniPlayerFragment) getParentFragment()).enterVideoPlayer();
+            ((MainLayoutFragment) getParentFragment()).enterVideoPlayer();
         } else {
             // if folder only has 1 folder and no video, skip to its children
             selected_folder = skipFolderChild(adapterData.get(position));

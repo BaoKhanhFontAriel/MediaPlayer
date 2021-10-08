@@ -29,9 +29,9 @@ import com.example.MediaPlayer.Data.ParcelableVideoList;
 import com.example.MediaPlayer.Data.MediaEntry;
 import com.example.MediaPlayer.Data.VideoHistoryRepository;
 import com.example.MediaPlayer.Data.VideoRepository;
-import com.example.MediaPlayer.Fragments.FullscreenPlayerFragment;
-import com.example.MediaPlayer.Fragments.MiniPlayerFragment;
-import com.example.MediaPlayer.Fragments.NormalPlayerFragment;
+import com.example.MediaPlayer.Fragments.FullscreenVideoPlayerFragment;
+import com.example.MediaPlayer.Fragments.MainLayoutFragment;
+import com.example.MediaPlayer.Fragments.NormalVideoPlayerFragment;
 import com.example.MediaPlayer.R;
 import com.example.MediaPlayer.Service.MyService;
 import com.example.MediaPlayer.ViewModel.PlaylistViewModel;
@@ -50,9 +50,9 @@ public class MainActivity extends AppCompatActivity {
     public static String TAG = "MainActivityC";
 
 
-    private FullscreenPlayerFragment fullscreenPlayerFragment;
-    private MiniPlayerFragment miniPlayerFragment;
-    private NormalPlayerFragment normalPlayerFragment;
+    private FullscreenVideoPlayerFragment fullscreenPlayerFragment;
+    private MainLayoutFragment miniPlayerFragment;
+    private NormalVideoPlayerFragment normalPlayerFragment;
     private Intent backgroundIntent;
 
     private PlaylistViewModel playlistViewModel;
@@ -77,9 +77,9 @@ public class MainActivity extends AppCompatActivity {
         IntentFilter intentFilter = new IntentFilter("com.example.MediaPlayer.MyService");
         registerReceiver(broadcastReceiver, intentFilter);
 
-        normalPlayerFragment = new NormalPlayerFragment();
-        fullscreenPlayerFragment = new FullscreenPlayerFragment();
-        miniPlayerFragment = new MiniPlayerFragment();
+        normalPlayerFragment = new NormalVideoPlayerFragment();
+        fullscreenPlayerFragment = new FullscreenVideoPlayerFragment();
+        miniPlayerFragment = new MainLayoutFragment();
 
         if (savedInstanceState == null) {
             Log.d(TAG, "create fragments: ");

@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.MediaPlayer.Activity.MainActivity;
 import com.example.MediaPlayer.Adapter.AlbumListAdapter;
 import com.example.MediaPlayer.Adapter.BaseListAdapter;
 import com.example.MediaPlayer.Data.AlbumRepository;
@@ -19,7 +20,7 @@ import com.example.MediaPlayer.R;
 
 import org.jetbrains.annotations.NotNull;
 
-public class AlbumFragment extends Fragment{
+public class AlbumTabFragment extends Fragment{
     private static final String TAG = "AlbumFragment";
 
     private RecyclerView recyclerView;
@@ -53,7 +54,12 @@ public class AlbumFragment extends Fragment{
     BaseListAdapter.IEntryClicked clicked = new BaseListAdapter.IEntryClicked() {
         @Override
         public void onItemClicked(int position) {
-
+            AlbumSongsFragment albumSongsFragment = new AlbumSongsFragment();
+            MainLayoutFragment miniPlayerFragment = new MainLayoutFragment();
+            ((MainActivity) getActivity()).getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.main_fragment, albumSongsFragment)
+                    .addToBackStack(null)
+                    .commit();
         }
     };
 }

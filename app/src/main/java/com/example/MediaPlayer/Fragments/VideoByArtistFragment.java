@@ -92,13 +92,13 @@ public class VideoByArtistFragment extends Fragment implements AdapterView.OnIte
         }
 
         ((MainActivity) getActivity()).getPLayList(videoPositions);
-        ((MiniPlayerFragment) getParentFragment()).onBackFromMiniPlayer();
+        ((MainLayoutFragment) getParentFragment()).onBackFromMiniPlayer();
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         int videoPosition = VideoRepository.getInstance().getVideoList().indexOf(videosByArtist.get(position));
         ((MainActivity) getActivity()).getVideo(videoPosition);
-        ((MiniPlayerFragment) getParentFragment()).enterVideoPlayer();
+        ((MainLayoutFragment) getParentFragment()).enterVideoPlayer();
     }
 }

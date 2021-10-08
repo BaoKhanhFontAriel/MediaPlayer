@@ -16,7 +16,7 @@ import com.example.MediaPlayer.ViewModel.PlaylistViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
-public class NormalPlayerFragment extends Fragment {
+public class NormalVideoPlayerFragment extends Fragment {
     private static final String TAG = "NormalPlayerFragment";
 
     private VideoButtonPanelFragment buttonPanelFragment;
@@ -25,7 +25,7 @@ public class NormalPlayerFragment extends Fragment {
     private ProgressBarFragment progressBarFragment;
     private PlaylistViewModel playlistViewModel;
 
-    public NormalPlayerFragment(){}
+    public NormalVideoPlayerFragment(){}
 
     @Override
     public void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {

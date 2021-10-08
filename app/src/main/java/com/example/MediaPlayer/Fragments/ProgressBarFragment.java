@@ -99,8 +99,6 @@ public class ProgressBarFragment extends Fragment {
                 seekBar.setProgress(playlistViewModel.getCurrentProcess().getValue());
             }
         });
-
-
     }
 
     public String convertToMinuteSecond(int milliseconds) {
