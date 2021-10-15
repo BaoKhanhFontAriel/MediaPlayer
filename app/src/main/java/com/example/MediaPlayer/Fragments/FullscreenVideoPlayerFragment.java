@@ -51,7 +51,7 @@ public class FullscreenVideoPlayerFragment extends Fragment {
 
 
         artistName = view.findViewById(R.id.artist_name);
-        videoName = view.findViewById(R.id.video_name);
+        videoName = view.findViewById(R.id.media_name_mini_song_player);
         video_detail = view.findViewById(R.id.video_detail);
 
         playlistViewModel = new ViewModelProvider(requireActivity()).get(PlaylistViewModel.class);
@@ -59,7 +59,7 @@ public class FullscreenVideoPlayerFragment extends Fragment {
         if (savedInstanceState == null) {
             Log.d(TAG, "create fragment: ");
             buttonPanelFragment = (VideoButtonPanelFragment) getChildFragmentManager().findFragmentById(R.id.button_panel);
-            videoPlayerFragment = (VideoViewFragment) getChildFragmentManager().findFragmentById(R.id.video_layout);
+            videoPlayerFragment = (VideoViewFragment) getChildFragmentManager().findFragmentById(R.id.videoview_mini_song_player);
             progressBarFragment = (ProgressBarFragment) getChildFragmentManager().findFragmentById(R.id.progress_bar);
 
             playlistViewModel.getIsVideoClicked().observe(getViewLifecycleOwner(), (isClicked) -> {

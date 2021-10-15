@@ -1,20 +1,9 @@
 package com.example.MediaPlayer.Fragments;
 
-import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageButton;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-
-import com.example.MediaPlayer.Activity.MainActivity;
-import com.example.MediaPlayer.Data.Utils;
 import com.example.MediaPlayer.R;
-import com.example.MediaPlayer.ViewModel.PlaylistViewModel;
 
 public class VideoButtonPanelFragment extends BaseButtonPanelFragment {
     private final static String TAG = "ButtonPanelFragment";
@@ -29,8 +18,8 @@ public class VideoButtonPanelFragment extends BaseButtonPanelFragment {
     public void setId(View view) {
         Log.d(TAG, "setId: ");
         super.setButtonPanelLayout(R.id.button_panel_layout, view);
-        super.setPauseButton(R.id.play_and_pause, view);
-        super.setNextButton(R.id.next, view);
+        super.setPauseButton(R.id.pause_mini_video_player, view);
+        super.setNextButton(R.id.next_mini_player, view);
         super.setPrevButton(R.id.previous, view);
         super.setShuffleButton(R.id.shuffle, view);
         super.setRepeatButton(R.id.repeat, view);

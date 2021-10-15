@@ -75,6 +75,8 @@ public class VideoTabFragment extends Fragment {
     BaseListAdapter.IEntryClicked onClickVideoInPlaylist = position -> {
         playlistViewModel.getCurrentPlaylist().setValue(VideoRepository.getInstance().getVideoList());
         playlistViewModel.getCurrentIndex().setValue(position);
+        PlayingSong.getInstance().getMediaPlayer().stop();
+        playlistViewModel.getIsSong().setValue(false);
         ((MainActivity) getActivity()).enterVideoPlayer();
     };
 }

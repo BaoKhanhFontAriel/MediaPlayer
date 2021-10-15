@@ -80,7 +80,7 @@ public class PlaylistFragment extends Fragment {
 
     private void setId(View view) {
         playlistRecycler = view.findViewById(R.id.playlist_recycler);
-        videoName = view.findViewById(R.id.video_name);
+        videoName = view.findViewById(R.id.media_name_mini_song_player);
 //        playlistTitle = view.findViewById(R.id.playlist_title);
 
     }

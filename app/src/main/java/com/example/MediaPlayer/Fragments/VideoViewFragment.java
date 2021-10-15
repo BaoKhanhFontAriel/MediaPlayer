@@ -14,6 +14,7 @@ import android.widget.VideoView;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.MediaPlayer.Activity.MainActivity;
@@ -48,8 +49,11 @@ public class VideoViewFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.video_view, container, false);
         setId(view);
+        setUpPlaylistViewModel(videoView);
+        return view;
+    }
 
-        Log.d(TAG, "requireActivity: " +requireActivity().toString());
+    public void setUpPlaylistViewModel(VideoView videoView){
         playlistViewModel = new ViewModelProvider(requireActivity()).get(PlaylistViewModel.class);
 
         videoView.setOnClickListener(v -> {
@@ -82,25 +86,24 @@ public class VideoViewFragment extends Fragment {
 
         playlistViewModel.getCurrentProcess().observe(getViewLifecycleOwner(), integer -> {
 
-            // use to receive im
-            getParentFragmentManager().setFragmentResultListener(Utils.REQUEST_KEY, this, (FragmentResultListener) (requestKey, bundle) -> {
-                if (bundle.getBoolean("is seekbar dragging", false)) {
-                    handler.removeCallbacks(watchProgress);
-                    videoView.seekTo(playlistViewModel.getCurrentProcess().getValue());
-                    handler.post(watchProgress);
-                }
-            });
-
             videoView.setOnCompletionListener((MediaPlayer.OnCompletionListener) mp -> {
                 Log.d(TAG, "complete: ");
                 ((MainActivity) getActivity()).onVideoCompleted();
             });
-            ((MainActivity) getActivity()).saveVideoProcess(integer, playlistViewModel.getCurrentMediaEntry().getMediaName());
             bundle.putBoolean("playing", videoView.isPlaying());
             getParentFragmentManager().setFragmentResult("requestKey", bundle);
         });
 
-        return view;
+        playlistViewModel.getIsDragging().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isSeekbarDragging) {
+                if (!isSeekbarDragging) {
+                    handler.removeCallbacks(watchProgress);
+                    videoView.seekTo(playlistViewModel.getCurrentProcess().getValue());
+                    handler.post(watchProgress);
+                }
+            }
+        });
     }
 
     Runnable watchProgress = new Runnable() {
@@ -112,9 +115,9 @@ public class VideoViewFragment extends Fragment {
     };
 
 
-    private void setId(View view) {
+    public void setId(View view) {
         videoView = view.findViewById(R.id.videoView);
-        videoLayout = view.findViewById(R.id.video_layout);
+        videoLayout = view.findViewById(R.id.videoview_mini_song_player);
     }
 
 

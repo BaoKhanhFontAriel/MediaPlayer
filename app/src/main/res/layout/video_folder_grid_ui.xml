@@ -6,7 +6,7 @@
     android:gravity="center">
 
     <LinearLayout
-        android:id="@+id/video_layout"
+        android:id="@+id/videoview_mini_song_player"
         android:layout_width="wrap_content"
         android:layout_height="160dp"
         android:orientation="vertical"
@@ -37,7 +37,7 @@
             android:layout_margin="5dp">
 
             <TextView
-                android:id="@+id/video_name"
+                android:id="@+id/media_name_mini_song_player"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:ellipsize="middle"

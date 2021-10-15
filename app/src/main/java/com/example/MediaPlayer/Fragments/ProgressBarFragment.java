@@ -52,6 +52,7 @@ public class ProgressBarFragment extends Fragment {
         setId(view);
 
         setUpViewModel();
+        playlistViewModel.getIsDragging().setValue(false);
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
@@ -64,14 +65,15 @@ public class ProgressBarFragment extends Fragment {
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
                 isSeekbarDragged = true;
+                playlistViewModel.getIsDragging().setValue(true);
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 playlistViewModel.getCurrentProcess().setValue(seekBar.getProgress());
-                bundle.putBoolean("is seekbar dragging", true);
-                getParentFragmentManager().setFragmentResult(Utils.REQUEST_KEY, bundle);
                 isSeekbarDragged = false;
+                playlistViewModel.getIsDragging().setValue(false);
+
             }
         });
 

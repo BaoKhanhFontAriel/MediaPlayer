@@ -30,7 +30,6 @@ import com.example.MediaPlayer.Data.MediaEntry;
 import com.example.MediaPlayer.Data.Utils;
 import com.example.MediaPlayer.R;
 import com.example.MediaPlayer.ViewModel.PlaylistViewModel;
-import com.google.android.material.appbar.AppBarLayout;
 
 import java.io.IOException;
 
@@ -70,6 +69,27 @@ public class SongPlayerFragment extends Fragment {
         browse = view.findViewById(R.id.browse_button);
         playlist = view.findViewById(R.id.playlist_button);
 
+        setPlaylistViewModel();
+
+        playlist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        browse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().beginTransaction()
+                                                        .hide(SongPlayerFragment.this)
+                                                        .commit();
+
+            }
+        });
+    }
+
+    public void setPlaylistViewModel(){
         playlistViewModel = new ViewModelProvider(requireActivity()).get(PlaylistViewModel.class);
 
         playlistViewModel.getCurrentIndex().observe(getViewLifecycleOwner(), integer -> {
@@ -83,66 +103,41 @@ public class SongPlayerFragment extends Fragment {
                 }
 
                 // clear all prev video process
-                mediaPlayer.reset();
                 handler.removeCallbacks(watchProgress);
-
-                try {
-                    mediaPlayer.setDataSource(getContext(), Uri.parse(audioEntry.getUri()));
-                    mediaPlayer.prepare();
-                    mediaPlayer.start();
-                    handler.post(watchProgress);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                PlayingSong.getInstance().createNewMediaPlayer(getContext(), audioEntry.getUri());
+                handler.post(watchProgress);
             }
         });
 
         playlistViewModel.getIsPauseSelected().observe(getViewLifecycleOwner(), (isPaused) -> {
-            Log.d(TAG, "isPaused: " + isPaused);
             if (isPaused) {
                 Log.d(TAG, "pause: ");
-                mediaPlayer.pause();
+                PlayingSong.getInstance().getMediaPlayer().pause();
                 handler.removeCallbacks(watchProgress);
             } else {
                 Log.d(TAG, "play: ");
-                mediaPlayer.start();
+                PlayingSong.getInstance().getMediaPlayer().start();
                 handler.post(watchProgress);
             }
         });
 
         playlistViewModel.getCurrentProcess().observe(getViewLifecycleOwner(), integer -> {
-
-            // use to receive im
-            getParentFragmentManager().setFragmentResultListener(Utils.REQUEST_KEY, this, (FragmentResultListener) (requestKey, bundle) -> {
-                if (bundle.getBoolean("is seekbar dragging", false)) {
-                    handler.removeCallbacks(watchProgress);
-                    mediaPlayer.seekTo(playlistViewModel.getCurrentProcess().getValue());
-                    handler.post(watchProgress);
-                }
-            });
-
-            mediaPlayer.setOnCompletionListener((MediaPlayer.OnCompletionListener) mp -> {
+            PlayingSong.getInstance().getMediaPlayer().setOnCompletionListener((MediaPlayer.OnCompletionListener) mp -> {
                 Log.d(TAG, "complete: ");
                 ((MainActivity) getActivity()).onVideoCompleted();
             });
-            ((MainActivity) getActivity()).saveVideoProcess(integer, playlistViewModel.getCurrentMediaEntry().getMediaName());
             bundle.putBoolean("playing", mediaPlayer.isPlaying());
             getParentFragmentManager().setFragmentResult("requestKey", bundle);
         });
 
-        playlist.setOnClickListener(new View.OnClickListener() {
+        playlistViewModel.getIsDragging().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        browse.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mediaPlayer.stop();
-                handler.removeCallbacks(watchProgress);
-                ((MainActivity) getActivity()).getSupportFragmentManager().popBackStack();
+            public void onChanged(Boolean isSeekbarDragging) {
+                if (!isSeekbarDragging) {
+                    handler.removeCallbacks(watchProgress);
+                    PlayingSong.getInstance().getMediaPlayer().seekTo(playlistViewModel.getCurrentProcess().getValue());
+                    handler.post(watchProgress);
+                }
             }
         });
     }
@@ -150,7 +145,7 @@ public class SongPlayerFragment extends Fragment {
     Runnable watchProgress = new Runnable() {
         @Override
         public void run() {
-            playlistViewModel.getCurrentProcess().setValue(mediaPlayer.getCurrentPosition());
+            playlistViewModel.getCurrentProcess().setValue(PlayingSong.getInstance().getMediaPlayer().getCurrentPosition());
             handler.post(watchProgress);
         }
     };

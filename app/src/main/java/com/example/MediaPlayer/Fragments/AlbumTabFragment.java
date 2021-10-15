@@ -20,7 +20,7 @@ import com.example.MediaPlayer.R;
 
 import org.jetbrains.annotations.NotNull;
 
-public class AlbumTabFragment extends Fragment{
+public class AlbumTabFragment extends Fragment {
     private static final String TAG = "AlbumFragment";
 
     private RecyclerView recyclerView;
@@ -54,12 +54,12 @@ public class AlbumTabFragment extends Fragment{
     BaseListAdapter.IEntryClicked clicked = new BaseListAdapter.IEntryClicked() {
         @Override
         public void onItemClicked(int position) {
-            AlbumSongsFragment albumSongsFragment = new AlbumSongsFragment();
-            MainLayoutFragment miniPlayerFragment = new MainLayoutFragment();
-            ((MainActivity) getActivity()).getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.main_fragment, albumSongsFragment)
-                    .addToBackStack(null)
-                    .commit();
+            ((MainLayoutFragment) getParentFragment().getParentFragment()).hideNavigationBar();
+
+            ((MainLayoutFragment) getParentFragment().getParentFragment()).showAlbumSongsFragment();
         }
     };
+
+
+
 }

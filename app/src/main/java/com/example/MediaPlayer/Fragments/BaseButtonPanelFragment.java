@@ -63,7 +63,8 @@ public class BaseButtonPanelFragment extends Fragment {
     }
 
     public int getLayout(){
-        return 0;
+        Log.d(TAG, "getLayout: ");
+        return -1;
     }
 
     @Override
@@ -214,7 +215,7 @@ public class BaseButtonPanelFragment extends Fragment {
             // none is selected
             case 0:
                 Utils.isRepeatEnabled = false;
-                if (shuffleButton.isSelected()) {
+                if (playlistViewModel.getIsShuffleSelected().getValue()) {
                     Utils.playMode = Utils.PLAY_MODE.SHUFFLE;
                 } else {
                     Utils.playMode = Utils.PLAY_MODE.AUTO_NEXT;
@@ -257,6 +258,7 @@ public class BaseButtonPanelFragment extends Fragment {
 
 
     public void setUpViewModel() {
+        Log.d(TAG, "setUpViewModel: ");
         playlistViewModel = new ViewModelProvider(requireActivity()).get(PlaylistViewModel.class);
     }
 
@@ -291,14 +293,20 @@ public class BaseButtonPanelFragment extends Fragment {
     public void getSavedButtonPanel() {
         Log.d(TAG, "setUpButtonPanel: ");
         Utils.playMode = Utils.PLAY_MODE.valueOf(sharedPreferences.getString(KEY_PLAY_MODE, "AUTO_NEXT"));
+
+        playlistViewModel.getIsShuffleSelected().setValue(sharedPreferences.getBoolean(KEY_SHUFFLE, false));
+
         repeatButtonMode = sharedPreferences.getInt(KEY_REPEAT_BUTTON, 0);
-        setRepeatButton(repeatButtonMode);
+//        setRepeatButton(repeatButtonMode);
+
         playlistViewModel.getIsPauseSelected().setValue(sharedPreferences.getBoolean(KEY_PAUSE, true));
+
         if (sharedPreferences.getBoolean(KEY_FULLSCREEN, false)) {
             fullscreenButton.performClick();
         }
-        playlistViewModel.getIsShuffleSelected().setValue(sharedPreferences.getBoolean(KEY_SHUFFLE, false));
     }
+
+
 
     public void saveButtonPanel() {
         Log.d(TAG, "saveButtonPanel: ");

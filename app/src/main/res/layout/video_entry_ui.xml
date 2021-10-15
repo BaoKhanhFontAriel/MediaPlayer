@@ -25,7 +25,7 @@
         android:gravity="center_vertical">
 
         <TextView
-            android:id="@+id/video_name"
+            android:id="@+id/media_name_mini_song_player"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Video name"

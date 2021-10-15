@@ -8,7 +8,7 @@
     android:id="@+id/minimize_constraint_layout">
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/video_layout"
+        android:id="@+id/videoview_mini_song_player"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"

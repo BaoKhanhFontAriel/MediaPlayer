@@ -8,7 +8,7 @@
     tools:context=".Activity.MainActivity">
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/video_layout"
+        android:id="@+id/videoview_mini_song_player"
         android:layout_width="match_parent"
         android:layout_height="250dp"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -25,9 +25,9 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@+id/video_layout"
-        app:layout_constraintLeft_toLeftOf="@+id/video_layout"
-        app:layout_constraintRight_toRightOf="@+id/video_layout" />
+        app:layout_constraintBottom_toBottomOf="@+id/videoview_mini_song_player"
+        app:layout_constraintLeft_toLeftOf="@+id/videoview_mini_song_player"
+        app:layout_constraintRight_toRightOf="@+id/videoview_mini_song_player" />
 
 
     <androidx.fragment.app.FragmentContainerView
@@ -41,7 +41,7 @@
         android:visibility="visible"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/video_layout" />
+        app:layout_constraintTop_toBottomOf="@+id/videoview_mini_song_player" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/playlist_view"

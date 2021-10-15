@@ -3,12 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/cardview_dark_background">
 
     <ImageView
         android:id="@+id/album_thumbnail"
-        android:layout_width="match_parent"
-        android:layout_height="302dp"
+        android:layout_width="417dp"
+        android:layout_height="204dp"
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,6 +24,7 @@
         android:layout_marginTop="20dp"
         android:text="Author"
         android:textSize="26dp"
+        android:textColor="@color/teal_200"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/album_thumbnail" />
@@ -71,17 +73,17 @@
         android:text="Song"
         android:textSize="28dp"
         android:textStyle="bold"
+        android:textColor="@color/teal_200"
         app:layout_constraintStart_toStartOf="@+id/play_all_album"
         app:layout_constraintTop_toBottomOf="@+id/play_all_album" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview_album"
-        android:layout_width="0dp"
-        android:layout_height="191dp"
-        android:layout_marginBottom="52dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="354dp"
+        android:layout_height="129dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="@+id/shuffle_button_album"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/play_all_album" />
-
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/song_name_album"
+        app:layout_constraintTop_toBottomOf="@+id/song_name_album" />
 </androidx.constraintlayout.widget.ConstraintLayout>

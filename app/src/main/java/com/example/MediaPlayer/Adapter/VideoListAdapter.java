@@ -16,7 +16,7 @@ public class VideoListAdapter extends BaseListAdapter {
         super(callback, context);
         this.videoEntryArrayList = videoEntries;
         setLayoutId(R.layout.video_entry_ui);
-        setTitleId(R.id.video_name);
+        setTitleId(R.id.media_name_mini_song_player);
         setDetailId(R.id.artist_and_duration);
         setThumbnailId(R.id.thumbnail);
     }

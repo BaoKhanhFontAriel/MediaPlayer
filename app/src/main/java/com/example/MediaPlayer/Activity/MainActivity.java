@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,12 +30,15 @@ import com.example.MediaPlayer.Data.ParcelableVideoList;
 import com.example.MediaPlayer.Data.MediaEntry;
 import com.example.MediaPlayer.Data.VideoHistoryRepository;
 import com.example.MediaPlayer.Data.VideoRepository;
+import com.example.MediaPlayer.Fragments.AlbumSongsFragment;
 import com.example.MediaPlayer.Fragments.FullscreenVideoPlayerFragment;
 import com.example.MediaPlayer.Fragments.MainLayoutFragment;
 import com.example.MediaPlayer.Fragments.NormalVideoPlayerFragment;
+import com.example.MediaPlayer.Fragments.SongPlayerFragment;
 import com.example.MediaPlayer.R;
 import com.example.MediaPlayer.Service.MyService;
 import com.example.MediaPlayer.ViewModel.PlaylistViewModel;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -51,8 +55,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     private FullscreenVideoPlayerFragment fullscreenPlayerFragment;
-    private MainLayoutFragment miniPlayerFragment;
+    private MainLayoutFragment mainAppLayoutFragment;
     private NormalVideoPlayerFragment normalPlayerFragment;
+    SongPlayerFragment songPlayerFragment;
     private Intent backgroundIntent;
 
     private PlaylistViewModel playlistViewModel;
@@ -77,20 +82,14 @@ public class MainActivity extends AppCompatActivity {
         IntentFilter intentFilter = new IntentFilter("com.example.MediaPlayer.MyService");
         registerReceiver(broadcastReceiver, intentFilter);
 
-        normalPlayerFragment = new NormalVideoPlayerFragment();
-        fullscreenPlayerFragment = new FullscreenVideoPlayerFragment();
-        miniPlayerFragment = new MainLayoutFragment();
-
-        if (savedInstanceState == null) {
-            Log.d(TAG, "create fragments: ");
-            setId();
-            handler.post(makeFolderTree);
-        }
+        setUpMainAppLayout();
+        hideBackButton();
+        handler.post(makeFolderTree);
 
         setUpViewModel();
         getSavedData();
-
         backgroundIntent = new Intent(this, MyService.class);
+        handler.post(initFragments);
     }
 
     private Runnable makeFolderTree = new Runnable() {
@@ -99,6 +98,34 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "makeFolderTree: ");
             FolderRepository.getInstance().makeFolderTree();
             playlistViewModel.getIsFolderCreated().setValue(true);
+        }
+    };
+
+    public void showBackButton() {
+       getSupportActionBar().setHomeAsUpIndicator(R.drawable.back_button);// set drawable icon
+       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    public void hideBackButton(){
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+    }
+
+    AlbumSongsFragment albumSongsFragment;
+    Runnable initFragments = new Runnable() {
+        @Override
+        public void run() {
+            normalPlayerFragment = new NormalVideoPlayerFragment();
+            fullscreenPlayerFragment = new FullscreenVideoPlayerFragment();
+            songPlayerFragment = new SongPlayerFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.main_fragment, songPlayerFragment)
+                    .hide(songPlayerFragment)
+                    .commit();
+            albumSongsFragment = new AlbumSongsFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.main_fragment, albumSongsFragment)
+                    .hide(albumSongsFragment)
+                    .commit();
         }
     };
 
@@ -332,14 +359,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void setId() {
-        Log.d(TAG, "setId: ");
+    public void setUpMainAppLayout() {
+        mainAppLayoutFragment = new MainLayoutFragment();
         getSupportFragmentManager().beginTransaction()
                 .setReorderingAllowed(true)
-                .add(R.id.main_fragment, miniPlayerFragment)
-                .addToBackStack("miniPlayerFragment")
+                .add(R.id.main_fragment, mainAppLayoutFragment)
                 .commit();
-        Log.d(TAG, "getFragments: " + getSupportFragmentManager().getFragments().toString());
+
     }
 
 
@@ -360,6 +386,16 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "enterMiniPlayer: ");
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.main_fragment, normalPlayerFragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+
+    public void enterSongPlayer() {
+        Log.d(TAG, "enterMiniPlayer: ");
+        getSupportFragmentManager()
+                .beginTransaction()
+                .show(songPlayerFragment)
                 .addToBackStack(null)
                 .commit();
     }

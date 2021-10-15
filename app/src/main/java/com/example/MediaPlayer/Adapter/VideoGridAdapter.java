@@ -45,7 +45,7 @@ public class VideoGridAdapter extends BaseGridAdapter {
 
     @Override
     public void setId(View itemView) {
-        videoName = itemView.findViewById(R.id.video_name);
+        videoName = itemView.findViewById(R.id.media_name_mini_song_player);
         album = itemView.findViewById(R.id.artist_and_duration);
         thumbnail = itemView.findViewById(R.id.thumbnail);
         folder_layout = itemView.findViewById(R.id.folder_layout);

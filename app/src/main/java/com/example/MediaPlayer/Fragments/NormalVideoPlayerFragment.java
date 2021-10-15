@@ -43,7 +43,7 @@ public class NormalVideoPlayerFragment extends Fragment {
         if (savedInstanceState == null) {
             Log.d(TAG, "create fragment: ");
             buttonPanelFragment = (VideoButtonPanelFragment) getChildFragmentManager().findFragmentById(R.id.button_panel);
-            videoViewFragment = (VideoViewFragment) getChildFragmentManager().findFragmentById(R.id.video_layout);
+            videoViewFragment = (VideoViewFragment) getChildFragmentManager().findFragmentById(R.id.videoview_mini_song_player);
             playlistFragment = (PlaylistFragment) getChildFragmentManager().findFragmentById(R.id.playlist_view);
             progressBarFragment = (ProgressBarFragment) getChildFragmentManager().findFragmentById(R.id.progress_bar);
         }

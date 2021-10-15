@@ -93,8 +93,8 @@ public class FolderGridAdapter extends BaseAdapter {
     }
 
     public void setId(View convertView) {
-        video_layout = convertView.findViewById(R.id.video_layout);
-        videoName = convertView.findViewById(R.id.video_name);
+        video_layout = convertView.findViewById(R.id.videoview_mini_song_player);
+        videoName = convertView.findViewById(R.id.media_name_mini_song_player);
         artistAndDuration = convertView.findViewById(R.id.artist_and_duration);
         thumbnail = convertView.findViewById(R.id.thumbnail);
         folder_layout = convertView.findViewById(R.id.folder_layout);

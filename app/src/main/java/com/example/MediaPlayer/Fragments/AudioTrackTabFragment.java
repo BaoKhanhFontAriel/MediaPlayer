@@ -51,7 +51,7 @@ public class AudioTrackTabFragment extends Fragment {
 
     private void setId(View view) {
         recyclerView = view.findViewById(R.id.playlist_recycler);
-        audioName = view.findViewById(R.id.video_name);
+        audioName = view.findViewById(R.id.media_name_mini_song_player);
 //        playlistTitle = view.findViewById(R.id.playlist_title);
 
     }
@@ -74,13 +74,8 @@ public class AudioTrackTabFragment extends Fragment {
             playlistViewModel.getIsPauseSelected().setValue(false);
             playlistViewModel.getCurrentPlaylist().setValue(AudioRepository.getInstance().getAudioList());
             playlistViewModel.getCurrentIndex().setValue(position);
-            SongPlayerFragment songPlayerFragment = new SongPlayerFragment();
-            ((MainActivity) getActivity()).getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.main_fragment, songPlayerFragment)
-                    .addToBackStack(null)
-                    .commit();
+            playlistViewModel.getIsSong().setValue(true);
+            ((MainActivity)getActivity()).enterSongPlayer();
         }
     };
-
 }

@@ -1,5 +1,6 @@
 package com.example.MediaPlayer.ViewModel;
 
+import android.media.MediaPlayer;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
@@ -21,6 +22,9 @@ public class PlaylistViewModel extends ViewModel {
     private MutableLiveData<Boolean> isShuffleSelected = new MutableLiveData<>();
     private MutableLiveData<Boolean> isVideoClicked = new MutableLiveData<>();
     private MutableLiveData<String> artistName = new MutableLiveData<>();
+    private MutableLiveData<Boolean> isSong = new MutableLiveData<>();
+    private MutableLiveData<Boolean> isDragging = new MutableLiveData<>();
+    private MutableLiveData<MediaPlayer> mediaPlayerMutableLiveData = new MutableLiveData<>();
 
 
 
@@ -60,5 +64,17 @@ public class PlaylistViewModel extends ViewModel {
 
     public MutableLiveData<String> getArtistName() {
         return artistName;
+    }
+
+    public MutableLiveData<Boolean> getIsSong() {
+        return isSong;
+    }
+
+    public MutableLiveData<Boolean> getIsDragging() {
+        return isDragging;
+    }
+
+    public MutableLiveData<MediaPlayer> getMediaPlayerMutableLiveData() {
+        return mediaPlayerMutableLiveData;
     }
 }

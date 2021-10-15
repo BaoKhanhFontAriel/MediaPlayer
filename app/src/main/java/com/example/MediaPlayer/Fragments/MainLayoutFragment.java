@@ -18,11 +18,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.MediaPlayer.Activity.MainActivity;
-import com.example.MediaPlayer.Data.MediaEntry;
 import com.example.MediaPlayer.R;
 import com.example.MediaPlayer.ViewModel.PlaylistViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -47,6 +48,7 @@ public class MainLayoutFragment extends Fragment {
     private BrowseTabFragment fragmentBrowse;
     private VideoTabFragment videoFragment;
     private AudioTabFragment audioFragment;
+    private AlbumSongsFragment albumSongsFragment;
 
 
     SharedPreferences sharedPreferences;
@@ -75,7 +77,11 @@ public class MainLayoutFragment extends Fragment {
             fragmentBrowse = new BrowseTabFragment();
             audioFragment = new AudioTabFragment();
             videoFragment = new VideoTabFragment();
+            miniSongPlayerFragment = new MiniSongPlayerFragment();
+            miniVideoPlayerFragment = new MiniVideoPlayerFragment();
+
             setUpNavigation(view);
+            handler.post(initFragments);
 
 //            getChildFragmentManager().beginTransaction()
 //                    .setReorderingAllowed(true)
@@ -83,72 +89,63 @@ public class MainLayoutFragment extends Fragment {
 //                    .addToBackStack("fragmentBrowse")
 //                    .commit();
         }
-
         setId(view);
-
         playlistViewModel = new ViewModelProvider(requireActivity()).get(PlaylistViewModel.class);
 
-//        playlistViewModel.getCurrentIndex().observe(getViewLifecycleOwner(), new Observer<Integer>() {
-//            @Override
-//            public void onChanged(Integer integer) {
-//                Log.d(TAG, "getCurrentVideoIndex: ");
-//                if (integer == -1){
-//                    detail_and_video_layout.setVisibility(View.GONE);
-//                }
-//                else {
-////                    detail_and_video_layout.setVisibility(View.VISIBLE);
-//                    MediaEntry videoEntry = playlistViewModel.getCurrentMediaEntry();
-//                    video_name.setText(videoEntry.getMediaName());
-//                    artistName.setText(videoEntry.getArtistName());
-//                }
-//            }
-//        });
-
-//        playlistViewModel.getIsPauseSelected().observe(getViewLifecycleOwner(), (isSelected) -> {
-//            pause_button.setSelected(isSelected);
-//            editor.putBoolean(KEY_PAUSE, isSelected);
-//            editor.apply();
-//        });
-//
-//        playlistViewModel.getIsVideoClicked().observe(getViewLifecycleOwner(), (isClicked) -> {
-//            Log.d(TAG, "getIsVideoClicked: " + isClicked);
-//            if (isClicked) {
-//                ((MainActivity) getActivity()).enterVideoPlayer();
-//            }
-//        });
-
-//        pause_button.setOnClickListener(v -> {
-//            playlistViewModel.getIsPauseSelected().setValue(!pause_button.isSelected());
-//        });
-
-//        detail_and_video_layout.setOnClickListener(v -> {
-//            Log.d(TAG, "backToNormalPlayer: ");
-//            onBackFromMiniPlayer();
-//        });
-
-
-
-//        next_button.setOnClickListener(v -> {
-//
-//            if (playlistViewModel.getIsShuffleSelected().getValue()) {
-//                ((MainActivity) getActivity()).playNextShuffleVideo();
-//                return;
-//            }
-//
-//            ((MainActivity) getActivity()).playNextVideo();
-//        });
-
+        playlistViewModel.getIsSong().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isSong) {
+                if (isSong) {
+                    showMiniSongPlayer();
+                } else
+                    showMiniVideoPlayer();
+            }
+        });
 
         return view;
     }
 
-    public void setUpNavigation(View view){
-        BottomNavigationView bottomNavigationView = view.findViewById(R.id.navigation);
+
+    Runnable initFragments = new Runnable() {
+        @Override
+        public void run() {
+
+            albumSongsFragment = new AlbumSongsFragment();
+            getChildFragmentManager().beginTransaction()
+                    .add(R.id.main_app_layout_fragment, albumSongsFragment)
+                    .hide(albumSongsFragment)
+                    .commit();
+        }
+    };
+
+
+    public void showAlbumSongsFragment() {
+        Log.d(TAG, "showAlbumSongsFragment: ");
+        hideAllFragment();
+        showFragment(albumSongsFragment);
+    }
+
+    public void hideAlbumSongsFragment() {
+        getChildFragmentManager().popBackStack();
+//        hideFragment(albumSongsFragment);
+    }
+
+    private BottomNavigationView bottomNavigationView;
+
+    public void hideNavigationBar() {
+        bottomNavigationView.setVisibility(View.GONE);
+    }
+    public void showNavigationBar() {
+        bottomNavigationView.setVisibility(View.VISIBLE);
+    }
+
+    public void setUpNavigation(View view) {
+        bottomNavigationView = view.findViewById(R.id.navigation);
         bottomNavigationView.setOnItemSelectedListener(listener);
         bottomNavigationView.setSelectedItemId(R.id.home);
     }
 
-    public void onBackFromMiniPlayer(){
+    public void onBackFromMiniPlayer() {
         Log.d(TAG, "onBackFromMiniPlayer: ");
         getChildFragmentManager().popBackStack("browse", 0);
         ((MainActivity) getActivity()).enterVideoPlayer();
@@ -159,41 +156,109 @@ public class MainLayoutFragment extends Fragment {
         public boolean onNavigationItemSelected(@NonNull @NotNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.home:
-                    getChildFragmentManager().beginTransaction().replace(R.id.mini_player_fragment, fragmentBrowse).commit();
+                    hideAllFragment();
+                    if (fragmentBrowse.isAdded()) {
+                        showFragment(fragmentBrowse);
+                    } else {
+                        getChildFragmentManager().beginTransaction().add(R.id.main_app_layout_fragment, fragmentBrowse)
+                                .commit();
+                    }
                     return true;
-
                 case R.id.video:
-                    getChildFragmentManager().beginTransaction().replace(R.id.mini_player_fragment, videoFragment).commit();
+                    hideAllFragment();
+                    if (videoFragment.isAdded()) {
+                        showFragment(videoFragment);
+                    } else {
+                        getChildFragmentManager().beginTransaction().add(R.id.main_app_layout_fragment, videoFragment)
+                                .commit();
+
+                    }
                     return true;
 
                 case R.id.audio:
-                    getChildFragmentManager().beginTransaction().replace(R.id.mini_player_fragment, audioFragment).commit();
+                    hideAllFragment();
+                    if (audioFragment.isAdded()) {
+                        showFragment(audioFragment);
+                    } else {
+                        getChildFragmentManager().beginTransaction().add(R.id.main_app_layout_fragment, audioFragment)
+                                .commit();
+
+                    }
                     return true;
             }
             return false;
         }
     };
 
-    public  void enterVideoPlayer(){
+    // hide all fragment except miniVideoPlayerFragment or miniSongPlayerFragment
+    public void hideAllFragment() {
+        FragmentManager fm = getChildFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        for (Fragment frag : fm.getFragments()) {
+            ft.hide(frag);
+        }
+        if (miniVideoPlayerFragment.isAdded()) {
+            ft.show(miniVideoPlayerFragment);
+        } else if (miniSongPlayerFragment.isAdded()) {
+            ft.show(miniSongPlayerFragment);
+        }
+
+        ft.commit();
+    }
+
+    public void showFragment(Fragment fragment) {
+        FragmentManager fm = getChildFragmentManager();
+        fm.beginTransaction()
+                .show(fragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    public void hideFragment(Fragment fragment) {
+        FragmentManager fm = getChildFragmentManager();
+        fm.beginTransaction()
+                .hide(fragment)
+                .commit();
+    }
+
+    MiniVideoPlayerFragment miniVideoPlayerFragment;
+
+    public void showMiniVideoPlayer() {
+
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.main_app_layout_mini_player_container, miniVideoPlayerFragment)
+                .commit();
+    }
+
+    MiniSongPlayerFragment miniSongPlayerFragment;
+
+    public void showMiniSongPlayer() {
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.main_app_layout_mini_player_container, miniSongPlayerFragment)
+                .commit();
+    }
+
+
+    public void enterVideoPlayer() {
         getChildFragmentManager().popBackStack("browse", 0);
         handler.postDelayed(enterVideoPlayer, 30);
     }
 
-    public void switchToFragment(Fragment fragment){
+    public void switchToFragment(Fragment fragment) {
         getChildFragmentManager().beginTransaction()
-                .replace(R.id.mini_player_fragment, fragment)
+                .replace(R.id.main_app_layout_fragment, fragment)
                 .addToBackStack(null)
                 .commit();
     }
 
     private void setId(View view) {
-        video_layout = (VideoViewFragment) getChildFragmentManager().findFragmentById(R.id.video_layout);
-        pause_button = view.findViewById(R.id.play_and_pause);
-        video_name = view.findViewById(R.id.video_name);
+        video_layout = (VideoViewFragment) getChildFragmentManager().findFragmentById(R.id.videoview_mini_song_player);
+        pause_button = view.findViewById(R.id.pause_mini_video_player);
+        video_name = view.findViewById(R.id.media_name_mini_song_player);
         detail = view.findViewById(R.id.artist_and_duration);
-        next_button = view.findViewById(R.id.next);
+        next_button = view.findViewById(R.id.next_mini_player);
         detail_and_video_layout = view.findViewById(R.id.detail_and_video_layout);
-        controller_layout = view.findViewById(R.id.controller_layout);
+        controller_layout = view.findViewById(R.id.song_controller_layout);
         videoView = view.findViewById(R.id.videoView);
         artistName = view.findViewById(R.id.artist_and_duration);
     }

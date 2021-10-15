@@ -3,7 +3,7 @@
     package="com.example.MediaPlayer">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:allowBackup="false"
@@ -14,7 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MediaPlayer">
-        <receiver android:name="com.example.MediaPlayer.BroadcastReceiver.MyReceiver"
+        <receiver
+            android:name="com.example.MediaPlayer.BroadcastReceiver.MyReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -27,14 +28,14 @@
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="connect_to_aidl_service"/>
+                <action android:name="connect_to_aidl_service" />
             </intent-filter>
         </service>
 
         <activity
             android:name="com.example.MediaPlayer.Activity.MainActivity"
-            android:screenOrientation="sensor"
-            android:configChanges="orientation|keyboardHidden">
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

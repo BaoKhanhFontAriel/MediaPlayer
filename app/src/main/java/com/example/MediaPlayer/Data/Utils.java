@@ -1,5 +1,17 @@
 package com.example.MediaPlayer.Data;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Build;
+import android.os.CancellationSignal;
+import android.util.Size;
+
+import androidx.annotation.RequiresApi;
+
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
 public class Utils {
     public enum PLAY_MODE {
         SHUFFLE,
@@ -30,4 +42,24 @@ public class Utils {
     public static final String CURRENT_SHUFFLE_INDICES = "CURRENT_SHUFFLE_INDICES";
     public static final String CURRENT_SHUFFLE_INDEX = "CURRENT_SHUFFLE_INDEX";
     public static final String IS_PAUSE = "IS_PAUSE";
+
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    public static Bitmap getThumbnail(Uri uri, Context context){
+        Bitmap thumb = null;
+        try {
+            thumb = context.getContentResolver().loadThumbnail(uri, new Size(200, 120), new CancellationSignal());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return thumb;
+    }
+
+    public  static String convertTime(int duration){
+        return String.format("%02d:%02d",
+                TimeUnit.MILLISECONDS.toMinutes((long) duration),
+                TimeUnit.MILLISECONDS.toSeconds((long) duration) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
+                                duration)));
+    }
+
 }
