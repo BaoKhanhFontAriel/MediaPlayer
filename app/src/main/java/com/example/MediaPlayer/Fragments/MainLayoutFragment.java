@@ -25,7 +25,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.MediaPlayer.Activity.MainActivity;
 import com.example.MediaPlayer.R;
-import com.example.MediaPlayer.ViewModel.PlaylistViewModel;
+import com.example.MediaPlayer.ViewModel.MediaPlayerViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
@@ -41,7 +41,7 @@ public class MainLayoutFragment extends Fragment {
     private ImageView next_button;
     private LinearLayout detail_and_video_layout;
     private ConstraintLayout controller_layout;
-    private PlaylistViewModel playlistViewModel;
+    private MediaPlayerViewModel mediaPlayerViewModel;
     private VideoView videoView;
     private LinearLayout arrow;
     private TextView artistName;
@@ -81,18 +81,12 @@ public class MainLayoutFragment extends Fragment {
             miniVideoPlayerFragment = new MiniVideoPlayerFragment();
 
             setUpNavigation(view);
-            handler.post(initFragments);
-
-//            getChildFragmentManager().beginTransaction()
-//                    .setReorderingAllowed(true)
-//                    .add(R.id.mini_player_fragment, fragmentBrowse)
-//                    .addToBackStack("fragmentBrowse")
-//                    .commit();
+//            handler.post(initFragments);
         }
         setId(view);
-        playlistViewModel = new ViewModelProvider(requireActivity()).get(PlaylistViewModel.class);
+        mediaPlayerViewModel = new ViewModelProvider(requireActivity()).get(MediaPlayerViewModel.class);
 
-        playlistViewModel.getIsSong().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+        mediaPlayerViewModel.getIsSong().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean isSong) {
                 if (isSong) {
@@ -121,13 +115,27 @@ public class MainLayoutFragment extends Fragment {
 
     public void showAlbumSongsFragment() {
         Log.d(TAG, "showAlbumSongsFragment: ");
-        hideAllFragment();
-        showFragment(albumSongsFragment);
+        albumSongsFragment = new AlbumSongsFragment();
+        getChildFragmentManager().beginTransaction()
+                .add(R.id.main_app_layout_fragment, albumSongsFragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    private GenrePlaylistFragment genrePlaylistFragment;
+    public void showGenreSongsFragment() {
+        genrePlaylistFragment = new GenrePlaylistFragment();
+        getChildFragmentManager().beginTransaction()
+                .add(R.id.main_app_layout_fragment, genrePlaylistFragment)
+                .addToBackStack(null)
+                .commit();
+    }
+    public void hideGenreSongsFragment() {
+        getChildFragmentManager().popBackStack();
     }
 
     public void hideAlbumSongsFragment() {
         getChildFragmentManager().popBackStack();
-//        hideFragment(albumSongsFragment);
     }
 
     private BottomNavigationView bottomNavigationView;
@@ -253,7 +261,7 @@ public class MainLayoutFragment extends Fragment {
 
     private void setId(View view) {
         video_layout = (VideoViewFragment) getChildFragmentManager().findFragmentById(R.id.videoview_mini_song_player);
-        pause_button = view.findViewById(R.id.pause_mini_video_player);
+        pause_button = view.findViewById(R.id.pause_mini_media_player);
         video_name = view.findViewById(R.id.media_name_mini_song_player);
         detail = view.findViewById(R.id.artist_and_duration);
         next_button = view.findViewById(R.id.next_mini_player);
@@ -266,7 +274,7 @@ public class MainLayoutFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        playlistViewModel.getIsVideoClicked().setValue(false);
+        mediaPlayerViewModel.getIsVideoClicked().setValue(false);
     }
 
     Runnable enterVideoPlayer = new Runnable() {

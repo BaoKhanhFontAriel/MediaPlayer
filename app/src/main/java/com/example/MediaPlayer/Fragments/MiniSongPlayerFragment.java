@@ -1,12 +1,12 @@
 package com.example.MediaPlayer.Fragments;
 
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,18 +19,18 @@ import com.example.MediaPlayer.Activity.MainActivity;
 import com.example.MediaPlayer.Data.AudioRepository;
 import com.example.MediaPlayer.Data.MediaEntry;
 import com.example.MediaPlayer.Data.Utils;
-import com.example.MediaPlayer.Data.VideoRepository;
 import com.example.MediaPlayer.R;
-import com.example.MediaPlayer.ViewModel.PlaylistViewModel;
+import com.example.MediaPlayer.ViewModel.MediaPlayerViewModel;
 
 import java.util.List;
 
 public class MiniSongPlayerFragment extends BaseMiniPlayerFragment{
     private static final String TAG = "MiniSongPlayerFragment";
-    PlaylistViewModel playlistViewModelMiniSongPlayer;
+    MediaPlayerViewModel mediaPlayerViewModelMiniSongPlayer;
     private ImageView thumbnail;
     private ConstraintLayout whole_song_mini_player;
-
+    private TextView song_name;
+    private TextView artist_name;
 
     @Override
     public int getLayout() {
@@ -45,18 +45,19 @@ public class MiniSongPlayerFragment extends BaseMiniPlayerFragment{
         thumbnail = view.findViewById(R.id.song_thumbnail_mini_song_player);
         whole_song_mini_player = view.findViewById(R.id.song_controller_layout);
 
-        playlistViewModelMiniSongPlayer = new ViewModelProvider(requireActivity()).get(PlaylistViewModel.class);
-        playlistViewModelMiniSongPlayer.getCurrentIndex().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+        mediaPlayerViewModelMiniSongPlayer = new ViewModelProvider(requireActivity()).get(MediaPlayerViewModel.class);
+        mediaPlayerViewModelMiniSongPlayer.getCurrentIndex().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @RequiresApi(api = Build.VERSION_CODES.Q)
             @Override
             public void onChanged(Integer integer) {
+                MediaEntry audioEntry = mediaPlayerViewModelMiniSongPlayer.getCurrentMediaEntry();
                 thumbnail.setImageBitmap(Utils.getThumbnail(
-                        Uri.parse(MiniSongPlayerFragment.super.getMedia().getUri()),
+                        Uri.parse(audioEntry.getUri()),
                         getContext()));
             }
         });
 
-        playlistViewModelMiniSongPlayer.getIsPauseSelected().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+        mediaPlayerViewModelMiniSongPlayer.getIsPauseSelected().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean isPause) {
                 if (isPause) {
@@ -70,7 +71,7 @@ public class MiniSongPlayerFragment extends BaseMiniPlayerFragment{
         whole_song_mini_player.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).enterSongPlayer();
+                ((MainActivity)getActivity()).showSongPlayerFragment();
             }
         });
     }

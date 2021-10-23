@@ -6,11 +6,12 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.MediaPlayer.Data.AlbumEntry;
 import com.example.MediaPlayer.Data.MediaEntry;
 
 import java.util.List;
 
-public class PlaylistViewModel extends ViewModel {
+public class MediaPlayerViewModel extends ViewModel {
     private static final String TAG = "PlaylistViewModel";
 
 
@@ -25,7 +26,8 @@ public class PlaylistViewModel extends ViewModel {
     private MutableLiveData<Boolean> isSong = new MutableLiveData<>();
     private MutableLiveData<Boolean> isDragging = new MutableLiveData<>();
     private MutableLiveData<MediaPlayer> mediaPlayerMutableLiveData = new MutableLiveData<>();
-
+    private MutableLiveData<AlbumEntry> albumEntryMutableLiveData = new MutableLiveData<>();
+    private MutableLiveData<List<MediaEntry>> genreSongEntryMutableLiveData = new MutableLiveData<>();
 
 
 
@@ -76,5 +78,13 @@ public class PlaylistViewModel extends ViewModel {
 
     public MutableLiveData<MediaPlayer> getMediaPlayerMutableLiveData() {
         return mediaPlayerMutableLiveData;
+    }
+
+    public MutableLiveData<AlbumEntry> getAlbumEntryMutableLiveData() {
+        return albumEntryMutableLiveData;
+    }
+
+    public MutableLiveData<List<MediaEntry>> getGenreSongEntryMutableLiveData() {
+        return genreSongEntryMutableLiveData;
     }
 }

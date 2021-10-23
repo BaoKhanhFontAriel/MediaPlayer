@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.CancellationSignal;
 import android.util.Log;
 import android.util.Size;
@@ -15,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.jetbrains.annotations.NotNull;
@@ -39,6 +41,10 @@ public class BaseListAdapter extends RecyclerView.Adapter<BaseListAdapter.BaseVi
         this.context = context;
     }
 
+    public Context getContext(){
+        return context;
+    }
+
     @NonNull
     @NotNull
     @Override
@@ -53,6 +59,7 @@ public class BaseListAdapter extends RecyclerView.Adapter<BaseListAdapter.BaseVi
     public void onBindViewHolder(@NonNull @NotNull BaseListAdapter.BaseViewHolder holder, int position) {
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     public Bitmap getThumbnail(Uri uri){
         Bitmap thumb = null;
         try {

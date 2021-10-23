@@ -4,10 +4,10 @@ import java.util.List;
 
 public class GenreEntry {
     private String genre;
-    private List<String> songs_within;
+    private List<MediaEntry> songs_within;
 
 
-    public GenreEntry(String genre, List<String> songs_within) {
+    public GenreEntry(String genre, List<MediaEntry> songs_within) {
         this.genre = genre;
         this.songs_within = songs_within;
     }
@@ -16,7 +16,7 @@ public class GenreEntry {
         return genre;
     }
 
-    public List<String> getSongs_within() {
+    public List<MediaEntry> getSongs_within() {
         return songs_within;
     }
 }

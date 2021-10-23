@@ -14,7 +14,7 @@
         android:layout_height="60dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/pause_mini_video_player"
+        app:layout_constraintEnd_toStartOf="@+id/pause_mini_media_player"
         app:layout_constraintStart_toStartOf="parent">
 
         <VideoView
@@ -53,18 +53,16 @@
     </LinearLayout>
 
     <ImageButton
-        android:id="@+id/pause_mini_video_player"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/next_mini_player"
-        app:layout_constraintTop_toTopOf="@id/detail_and_video_layout"
+        android:id="@+id/pause_mini_media_player"
         android:layout_width="40dp"
         android:layout_height="0dp"
         android:backgroundTint="#00FFFFFF"
         android:scaleType="fitCenter"
         android:src="@drawable/pause_and_play_state"
-        tools:layout_editor_absoluteX="287dp"
-        tools:layout_editor_absoluteY="20dp"
-        />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/next_mini_player"
+        app:layout_constraintTop_toTopOf="@id/detail_and_video_layout"
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageButton
         android:id="@+id/next_mini_player"

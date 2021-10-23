@@ -1,9 +1,11 @@
 package com.example.MediaPlayer.Adapter;
 
 import android.content.Context;
+import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
 
+import com.example.MediaPlayer.Data.AudioRepository;
 import com.example.MediaPlayer.Data.GenreEntry;
 import com.example.MediaPlayer.R;
 

@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,11 +33,12 @@ import com.example.MediaPlayer.Fragments.AlbumSongsFragment;
 import com.example.MediaPlayer.Fragments.FullscreenVideoPlayerFragment;
 import com.example.MediaPlayer.Fragments.MainLayoutFragment;
 import com.example.MediaPlayer.Fragments.NormalVideoPlayerFragment;
+import com.example.MediaPlayer.Fragments.PlaylistFragment;
 import com.example.MediaPlayer.Fragments.SongPlayerFragment;
+import com.example.MediaPlayer.Fragments.SongPlaylistFragment;
 import com.example.MediaPlayer.R;
 import com.example.MediaPlayer.Service.MyService;
-import com.example.MediaPlayer.ViewModel.PlaylistViewModel;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.example.MediaPlayer.ViewModel.MediaPlayerViewModel;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -57,10 +57,12 @@ public class MainActivity extends AppCompatActivity {
     private FullscreenVideoPlayerFragment fullscreenPlayerFragment;
     private MainLayoutFragment mainAppLayoutFragment;
     private NormalVideoPlayerFragment normalPlayerFragment;
+    private PlaylistFragment playlistFragment;
+
     SongPlayerFragment songPlayerFragment;
     private Intent backgroundIntent;
 
-    private PlaylistViewModel playlistViewModel;
+    private MediaPlayerViewModel mediaPlayerViewModel;
 
     public static final int PERMISSION_READ = 0;
     Handler handler = new Handler(Looper.getMainLooper());
@@ -97,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         public void run() {
             Log.d(TAG, "makeFolderTree: ");
             FolderRepository.getInstance().makeFolderTree();
-            playlistViewModel.getIsFolderCreated().setValue(true);
+            mediaPlayerViewModel.getIsFolderCreated().setValue(true);
         }
     };
 
@@ -131,23 +133,23 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void setUpViewModel() {
-        playlistViewModel = new ViewModelProvider(MainActivity.this).get(PlaylistViewModel.class);
+        mediaPlayerViewModel = new ViewModelProvider(MainActivity.this).get(MediaPlayerViewModel.class);
 
-        playlistViewModel.getCurrentIndex().observe(this, position -> {
+        mediaPlayerViewModel.getCurrentIndex().observe(this, position -> {
             backgroundIntent.putExtra(Utils.CURRENT_INDEX, position);
             if (VideoHistoryRepository.getInstance().getHistory() != null) {
-                VideoHistoryRepository.getInstance().updateHistory(playlistViewModel.getCurrentMediaEntry());
+                VideoHistoryRepository.getInstance().updateHistory(mediaPlayerViewModel.getCurrentMediaEntry());
             }
             saveVideoIndex(position);
         });
 
-        playlistViewModel.getCurrentProcess().observe(this, integer ->
+        mediaPlayerViewModel.getCurrentProcess().observe(this, integer ->
         {
             backgroundIntent.putExtra(Utils.CURRENT_PROGRESS, integer);
-            saveVideoProcess(integer, playlistViewModel.getCurrentMediaEntry().getMediaName());
+            saveVideoProcess(integer, mediaPlayerViewModel.getCurrentMediaEntry().getMediaName());
         });
 
-        playlistViewModel.getCurrentPlaylist().observe(this, videoEntries -> {
+        mediaPlayerViewModel.getCurrentPlaylist().observe(this, videoEntries -> {
             ParcelableVideoList videoListParcelable = new ParcelableVideoList(videoEntries);
             backgroundIntent.putExtra(Utils.CURRENT_PLAYLIST, videoListParcelable);
         });
@@ -169,17 +171,17 @@ public class MainActivity extends AppCompatActivity {
     public void getSavedData() {
         Log.d(TAG, "getSavedData: ");
         VideoHistoryRepository.getInstance().updateHistory(getSavedHistory());
-        playlistViewModel.getCurrentPlaylist().setValue(getSavedPlaylist());
-        Log.d(TAG, "getCurrentPlaylist: " + playlistViewModel.getCurrentPlaylist().getValue().size());
-        playlistViewModel.getCurrentIndex().setValue(getSavedVideoPosition());
-        playlistViewModel.getCurrentProcess().setValue(getSavedVideoProcess(playlistViewModel.getCurrentMediaEntry().getMediaName()));
-        playlistViewModel.getIsPauseSelected().setValue(true);
+        mediaPlayerViewModel.getCurrentPlaylist().setValue(getSavedPlaylist());
+        Log.d(TAG, "getCurrentPlaylist: " + mediaPlayerViewModel.getCurrentPlaylist().getValue().size());
+        mediaPlayerViewModel.getCurrentIndex().setValue(getSavedVideoPosition());
+        mediaPlayerViewModel.getCurrentProcess().setValue(getSavedVideoProcess(mediaPlayerViewModel.getCurrentMediaEntry().getMediaName()));
+        mediaPlayerViewModel.getIsPauseSelected().setValue(true);
     }
 
 
     public void onVideoCompleted() {
         Log.d(TAG, "onVideoCompleted: ");
-        String name = playlistViewModel.getCurrentMediaEntry().getMediaName();
+        String name = mediaPlayerViewModel.getCurrentMediaEntry().getMediaName();
         saveVideoProcess(0, name);
         switch (Utils.playMode) {
             case AUTO_NEXT:
@@ -197,8 +199,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void getVideo(int position) {
         Log.d(TAG, "getVideo: ");
-        playlistViewModel.getCurrentPlaylist().setValue(VideoRepository.getInstance().getVideoList());
-        playlistViewModel.getCurrentIndex().setValue(position);
+        mediaPlayerViewModel.getCurrentPlaylist().setValue(VideoRepository.getInstance().getVideoList());
+        mediaPlayerViewModel.getCurrentIndex().setValue(position);
     }
 
     public void getPLayList(ArrayList<Integer> videoPositions) {
@@ -206,43 +208,43 @@ public class MainActivity extends AppCompatActivity {
         for (int position : videoPositions) {
             videosInSelectedFolder.add(VideoRepository.getInstance().getVideoList().get(position));
         }
-        playlistViewModel.getCurrentPlaylist().setValue(videosInSelectedFolder);
-        playlistViewModel.getCurrentIndex().setValue(0);
+        mediaPlayerViewModel.getCurrentPlaylist().setValue(videosInSelectedFolder);
+        mediaPlayerViewModel.getCurrentIndex().setValue(0);
     }
 
     public void playPrevVideo() {
         Log.d(TAG, "playPrevVideo: ");
-        int currentPos = playlistViewModel.getCurrentIndex().getValue();
+        int currentPos = mediaPlayerViewModel.getCurrentIndex().getValue();
         if (Utils.isRepeatEnabled && currentPos == 0) {
-            currentPos = playlistViewModel.getCurrentPlaylist().getValue().size();
+            currentPos = mediaPlayerViewModel.getCurrentPlaylist().getValue().size();
         }
 
         if (currentPos > 0) {
             currentPos -= 1;
-            playlistViewModel.getCurrentIndex().setValue(currentPos);
-            playlistViewModel.getCurrentProcess().setValue(getSavedVideoProcess(playlistViewModel.getCurrentMediaEntry().getMediaName()));
+            mediaPlayerViewModel.getCurrentIndex().setValue(currentPos);
+            mediaPlayerViewModel.getCurrentProcess().setValue(getSavedVideoProcess(mediaPlayerViewModel.getCurrentMediaEntry().getMediaName()));
         }
     }
 
     public void playNextVideo() {
         Log.d(TAG, "playNextVideo: ");
-        int currentPosition = playlistViewModel.getCurrentIndex().getValue();
+        int currentPosition = mediaPlayerViewModel.getCurrentIndex().getValue();
 
-        if (Utils.isRepeatEnabled && currentPosition == playlistViewModel.getCurrentPlaylist().getValue().size() - 1) {
+        if (Utils.isRepeatEnabled && currentPosition == mediaPlayerViewModel.getCurrentPlaylist().getValue().size() - 1) {
             currentPosition = -1;
         }
 
-        if (currentPosition < playlistViewModel.getCurrentPlaylist().getValue().size() - 1) {
+        if (currentPosition < mediaPlayerViewModel.getCurrentPlaylist().getValue().size() - 1) {
             currentPosition += 1;
-            playlistViewModel.getCurrentIndex().setValue(currentPosition);
-            playlistViewModel.getCurrentProcess().setValue(getSavedVideoProcess(playlistViewModel.getCurrentMediaEntry().getMediaName()));
+            mediaPlayerViewModel.getCurrentIndex().setValue(currentPosition);
+            mediaPlayerViewModel.getCurrentProcess().setValue(getSavedVideoProcess(mediaPlayerViewModel.getCurrentMediaEntry().getMediaName()));
         }
     }
 
     public void repeatOneVideo() {
         Log.d(TAG, "repeatOneVideo: ");
-        playlistViewModel.getCurrentIndex().setValue(playlistViewModel.getCurrentIndex().getValue());
-        playlistViewModel.getCurrentProcess().setValue(0);
+        mediaPlayerViewModel.getCurrentIndex().setValue(mediaPlayerViewModel.getCurrentIndex().getValue());
+        mediaPlayerViewModel.getCurrentProcess().setValue(0);
     }
 
     public void playNextShuffleVideo() {
@@ -257,11 +259,11 @@ public class MainActivity extends AppCompatActivity {
 
             if (currentShuffleIndex < shuffleIndices.size() - 1) {
                 currentShuffleIndex++;
-                playlistViewModel.getCurrentIndex().setValue(shuffleIndices.get(currentShuffleIndex));
+                mediaPlayerViewModel.getCurrentIndex().setValue(shuffleIndices.get(currentShuffleIndex));
             }
         }
 
-        playlistViewModel.getCurrentProcess().setValue(getSavedVideoProcess(playlistViewModel.getCurrentMediaEntry().getMediaName()));
+        mediaPlayerViewModel.getCurrentProcess().setValue(getSavedVideoProcess(mediaPlayerViewModel.getCurrentMediaEntry().getMediaName()));
     }
 
     public void playPrevShuffleVideo() {
@@ -276,11 +278,11 @@ public class MainActivity extends AppCompatActivity {
             if (currentShuffleIndex > 0) {
                 currentShuffleIndex--;
 
-                playlistViewModel.getCurrentIndex().setValue(shuffleIndices.get(currentShuffleIndex));
+                mediaPlayerViewModel.getCurrentIndex().setValue(shuffleIndices.get(currentShuffleIndex));
             }
         }
 
-        playlistViewModel.getCurrentProcess().setValue(getSavedVideoProcess(playlistViewModel.getCurrentMediaEntry().getMediaName()));
+        mediaPlayerViewModel.getCurrentProcess().setValue(getSavedVideoProcess(mediaPlayerViewModel.getCurrentMediaEntry().getMediaName()));
     }
 
     // generate a shuffle playlist by shuffling the video index of the normal video list
@@ -300,21 +302,21 @@ public class MainActivity extends AppCompatActivity {
         shuffleIndices = new ArrayList<>();
         currentShuffleIndex = 0;
 
-        shuffleIndices.add(playlistViewModel.getCurrentIndex().getValue());
+        shuffleIndices.add(mediaPlayerViewModel.getCurrentIndex().getValue());
 
-        if (playlistViewModel.getCurrentPlaylist().getValue().size() > 2) {
+        if (mediaPlayerViewModel.getCurrentPlaylist().getValue().size() > 2) {
             shuffleIndices.add(nextShuffleNumber());
             shuffleIndices.addAll(nextShuffleNumbers());
         }
 
-        if (playlistViewModel.getCurrentPlaylist().getValue().size() == 2) {
-            shuffleIndices.add(1 - playlistViewModel.getCurrentIndex().getValue());
+        if (mediaPlayerViewModel.getCurrentPlaylist().getValue().size() == 2) {
+            shuffleIndices.add(1 - mediaPlayerViewModel.getCurrentIndex().getValue());
         }
     }
 
     public ArrayList<Integer> nextShuffleNumbers() {
         ArrayList<Integer> randomList = new ArrayList<>();
-        for (int i = 0; i < playlistViewModel.getCurrentPlaylist().getValue().size(); i++) {
+        for (int i = 0; i < mediaPlayerViewModel.getCurrentPlaylist().getValue().size(); i++) {
             if (!shuffleIndices.contains(i)) {
                 randomList.add(i);
             }
@@ -324,9 +326,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public int nextShuffleNumber() {
-        int randomNumber = new Random().nextInt(playlistViewModel.getCurrentPlaylist().getValue().size());
+        int randomNumber = new Random().nextInt(mediaPlayerViewModel.getCurrentPlaylist().getValue().size());
         while (shuffleIndices.contains(randomNumber) || randomNumber == shuffleIndices.get(0) + 1) {
-            randomNumber = new Random().nextInt(playlistViewModel.getCurrentPlaylist().getValue().size());
+            randomNumber = new Random().nextInt(mediaPlayerViewModel.getCurrentPlaylist().getValue().size());
         }
         return randomNumber;
     }
@@ -391,11 +393,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void enterSongPlayer() {
+    public void showSongPlayerFragment() {
         Log.d(TAG, "enterMiniPlayer: ");
         getSupportFragmentManager()
                 .beginTransaction()
                 .show(songPlayerFragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    private SongPlaylistFragment songPlaylistFragment;
+    public  void addPlaylistFragment(){
+        songPlaylistFragment = new SongPlaylistFragment();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.main_fragment, songPlaylistFragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    public void showPlaylistFragment(){
+        getSupportFragmentManager()
+                .beginTransaction()
+                .show(songPlaylistFragment)
                 .addToBackStack(null)
                 .commit();
     }
@@ -480,8 +500,8 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "onReceive: ");
             saveVideoProcess(intent.getIntExtra(Utils.CURRENT_PROGRESS, 0), intent.getStringExtra(Utils.CURRENT_VIDEO_NAME));
             ParcelableVideoList parcelableVideoList = intent.getParcelableExtra(Utils.CURRENT_PLAYLIST);
-            playlistViewModel.getCurrentPlaylist().setValue(parcelableVideoList.getVideoEntries());
-            playlistViewModel.getCurrentIndex().setValue(intent.getIntExtra(Utils.CURRENT_INDEX, 0));
+            mediaPlayerViewModel.getCurrentPlaylist().setValue(parcelableVideoList.getVideoEntries());
+            mediaPlayerViewModel.getCurrentIndex().setValue(intent.getIntExtra(Utils.CURRENT_INDEX, 0));
         }
     };
 
@@ -503,10 +523,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        backgroundIntent.putExtra(Utils.IS_PAUSE, playlistViewModel.getIsPauseSelected().getValue());
+        backgroundIntent.putExtra(Utils.IS_PAUSE, mediaPlayerViewModel.getIsPauseSelected().getValue());
         backgroundIntent.putExtra(Utils.CURRENT_SHUFFLE_INDICES, shuffleIndices);
         backgroundIntent.putExtra(Utils.CURRENT_SHUFFLE_INDEX, currentShuffleIndex);
-        if (!playlistViewModel.getIsPauseSelected().getValue()) {
+        if (!mediaPlayerViewModel.getIsPauseSelected().getValue()) {
             handler.postDelayed(() -> startService(backgroundIntent), 5);
         }
     }

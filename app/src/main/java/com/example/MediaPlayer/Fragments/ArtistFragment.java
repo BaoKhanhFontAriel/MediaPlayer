@@ -21,7 +21,7 @@ import com.example.MediaPlayer.Adapter.BaseListAdapter;
 import com.example.MediaPlayer.Adapter.MusicArtistListAdapter;
 import com.example.MediaPlayer.Data.AudioArtistRepository;
 import com.example.MediaPlayer.R;
-import com.example.MediaPlayer.ViewModel.PlaylistViewModel;
+import com.example.MediaPlayer.ViewModel.MediaPlayerViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -34,7 +34,7 @@ public class ArtistFragment extends Fragment {
     private LinearLayout arrow_button;
     private RecyclerView artistGridView;
     private ArrayList<String> artists = new ArrayList<>();
-    PlaylistViewModel playlistViewModel;
+    MediaPlayerViewModel mediaPlayerViewModel;
     public static final String ARG_OBJECT = "object";
 
     @Override

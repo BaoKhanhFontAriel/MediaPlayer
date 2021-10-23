@@ -14,7 +14,7 @@
         android:layout_height="60dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/pause_mini_video_player"
+        app:layout_constraintEnd_toStartOf="@+id/pause_mini_media_player"
         app:layout_constraintStart_toStartOf="parent">
 
         <FrameLayout
@@ -62,14 +62,13 @@
     </LinearLayout>
 
     <ImageButton
-        android:id="@+id/pause_mini_video_player"
+        android:id="@+id/pause_mini_media_player"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/next_mini_player"
         app:layout_constraintTop_toTopOf="@id/detail_and_video_layout"
         android:layout_width="40dp"
         android:layout_height="0dp"
-        android:backgroundTint="@color/white"
-        android:backgroundTintMode="src_atop"
+        android:backgroundTint="#00FFFFFF"
         android:scaleType="fitCenter"
         android:src="@drawable/pause_and_play_state"
         tools:layout_editor_absoluteX="287dp"

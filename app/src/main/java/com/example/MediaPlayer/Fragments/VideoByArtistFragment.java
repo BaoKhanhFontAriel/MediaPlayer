@@ -20,7 +20,7 @@ import com.example.MediaPlayer.Adapter.VideoGridAdapter;
 import com.example.MediaPlayer.Data.VideoRepository;
 import com.example.MediaPlayer.Data.MediaEntry;
 import com.example.MediaPlayer.R;
-import com.example.MediaPlayer.ViewModel.PlaylistViewModel;
+import com.example.MediaPlayer.ViewModel.MediaPlayerViewModel;
 
 import java.util.ArrayList;
 
@@ -34,7 +34,7 @@ public class VideoByArtistFragment extends Fragment implements AdapterView.OnIte
     private ImageView artist_icon;
     private GridView videoGrid;
     private ArrayList<MediaEntry> videosByArtist = new ArrayList<>();
-    PlaylistViewModel playlistViewModel;
+    MediaPlayerViewModel mediaPlayerViewModel;
     private Handler handler;
 
     public VideoByArtistFragment() {
@@ -46,9 +46,9 @@ public class VideoByArtistFragment extends Fragment implements AdapterView.OnIte
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.artist_by_video_layout, container, false);
         setId(view);
-        playlistViewModel = new ViewModelProvider(requireActivity()).get(PlaylistViewModel.class);
+        mediaPlayerViewModel = new ViewModelProvider(requireActivity()).get(MediaPlayerViewModel.class);
 
-        playlistViewModel.getArtistName().observe(getViewLifecycleOwner(), new Observer<String>() {
+        mediaPlayerViewModel.getArtistName().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String artistName) {
                 for (MediaEntry videoEntry : VideoRepository.getInstance().getVideoList()) {

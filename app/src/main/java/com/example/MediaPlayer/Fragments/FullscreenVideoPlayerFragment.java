@@ -17,7 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.MediaPlayer.Data.MediaEntry;
 import com.example.MediaPlayer.R;
-import com.example.MediaPlayer.ViewModel.PlaylistViewModel;
+import com.example.MediaPlayer.ViewModel.MediaPlayerViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -30,7 +30,7 @@ public class FullscreenVideoPlayerFragment extends Fragment {
     private TextView artistName;
     private TextView videoName;
     private LinearLayout video_detail;
-    private PlaylistViewModel playlistViewModel;
+    private MediaPlayerViewModel mediaPlayerViewModel;
     Handler handler = new Handler(Looper.getMainLooper());
 
     public FullscreenVideoPlayerFragment() {
@@ -54,7 +54,7 @@ public class FullscreenVideoPlayerFragment extends Fragment {
         videoName = view.findViewById(R.id.media_name_mini_song_player);
         video_detail = view.findViewById(R.id.video_detail);
 
-        playlistViewModel = new ViewModelProvider(requireActivity()).get(PlaylistViewModel.class);
+        mediaPlayerViewModel = new ViewModelProvider(requireActivity()).get(MediaPlayerViewModel.class);
 
         if (savedInstanceState == null) {
             Log.d(TAG, "create fragment: ");
@@ -62,7 +62,7 @@ public class FullscreenVideoPlayerFragment extends Fragment {
             videoPlayerFragment = (VideoViewFragment) getChildFragmentManager().findFragmentById(R.id.videoview_mini_song_player);
             progressBarFragment = (ProgressBarFragment) getChildFragmentManager().findFragmentById(R.id.progress_bar);
 
-            playlistViewModel.getIsVideoClicked().observe(getViewLifecycleOwner(), (isClicked) -> {
+            mediaPlayerViewModel.getIsVideoClicked().observe(getViewLifecycleOwner(), (isClicked) -> {
                 Log.d(TAG, "getIsVideoClicked: " + isClicked);
                 handler.removeCallbacks(hide);
                 if (isClicked) {
@@ -75,9 +75,9 @@ public class FullscreenVideoPlayerFragment extends Fragment {
                 }
             });
 
-            playlistViewModel.getCurrentIndex().observe(getViewLifecycleOwner(), integer -> {
+            mediaPlayerViewModel.getCurrentIndex().observe(getViewLifecycleOwner(), integer -> {
                 Log.d(TAG, "getCurrentVideoIndex: ");
-                MediaEntry videoEntry = playlistViewModel.getCurrentMediaEntry();
+                MediaEntry videoEntry = mediaPlayerViewModel.getCurrentMediaEntry();
                 videoName.setText(videoEntry.getMediaName());
                 artistName.setText(videoEntry.getArtistName());
                 handler.postDelayed(hide, 3000);
@@ -114,6 +114,6 @@ public class FullscreenVideoPlayerFragment extends Fragment {
         super.onStop();
         Log.d(TAG, "onStop: ");
         handler.removeCallbacks(hide);
-        playlistViewModel.getIsVideoClicked().setValue(false);
+        mediaPlayerViewModel.getIsVideoClicked().setValue(false);
     }
 }

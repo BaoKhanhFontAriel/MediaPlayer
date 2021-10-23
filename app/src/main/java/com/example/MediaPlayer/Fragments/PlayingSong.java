@@ -7,16 +7,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 
-import androidx.fragment.app.Fragment;
-
-import com.example.MediaPlayer.ViewModel.PlaylistViewModel;
+import com.example.MediaPlayer.ViewModel.MediaPlayerViewModel;
 
 import java.io.IOException;
 
 public class PlayingSong {
     private static final String TAG = "PlayingSongInstance";
 
-    private PlaylistViewModel playlistViewModel;
+    private MediaPlayerViewModel mediaPlayerViewModel;
     Bundle bundle = new Bundle();
     private MediaPlayer mediaPlayer = new MediaPlayer();;
     Handler handler = new Handler(Looper.getMainLooper());

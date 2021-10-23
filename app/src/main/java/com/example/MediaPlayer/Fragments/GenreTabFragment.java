@@ -11,14 +11,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.MediaPlayer.Activity.MainActivity;
 import com.example.MediaPlayer.Adapter.BaseListAdapter;
 import com.example.MediaPlayer.Adapter.GenreListAdapter;
 import com.example.MediaPlayer.Data.GenreRepository;
 import com.example.MediaPlayer.R;
+import com.example.MediaPlayer.ViewModel.MediaPlayerViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -28,6 +31,7 @@ public class GenreTabFragment extends Fragment {
     private TextView genre_title;
     private TextView numbers_of_songs;
     private RecyclerView recyclerView;
+    MediaPlayerViewModel mediaPlayerViewModel;
 
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -41,6 +45,7 @@ public class GenreTabFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         setId(view);
         setRecyclerView();
+        mediaPlayerViewModel = new ViewModelProvider(requireActivity()).get(MediaPlayerViewModel.class);
     }
 
     private void setId(View view) {
@@ -64,6 +69,9 @@ public class GenreTabFragment extends Fragment {
     }
 
     BaseListAdapter.IEntryClicked clicked = position -> {
-
+        mediaPlayerViewModel.getGenreSongEntryMutableLiveData().setValue(GenreRepository.getInstance().getGenreList().get(position).getSongs_within());
+        ((MainLayoutFragment) getParentFragment().getParentFragment()).hideNavigationBar();
+        ((MainActivity) getActivity()).showBackButton();
+        ((MainLayoutFragment) getParentFragment().getParentFragment()).showGenreSongsFragment();
     };
 }

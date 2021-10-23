@@ -21,7 +21,7 @@ import com.example.MediaPlayer.Adapter.VideoListAdapter;
 import com.example.MediaPlayer.Data.VideoRepository;
 import com.example.MediaPlayer.R;
 import com.example.MediaPlayer.Data.MediaEntry;
-import com.example.MediaPlayer.ViewModel.PlaylistViewModel;
+import com.example.MediaPlayer.ViewModel.MediaPlayerViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -29,7 +29,7 @@ import java.util.ArrayList;
 
 public class VideoTabFragment extends Fragment {
     private PlaylistFragment playlistFragment;
-    private PlaylistViewModel playlistViewModel;
+    private MediaPlayerViewModel mediaPlayerViewModel;
     RecyclerView recyclerView;
 
     @Override
@@ -50,7 +50,7 @@ public class VideoTabFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        playlistViewModel = new ViewModelProvider(getActivity()).get(PlaylistViewModel.class);
+        mediaPlayerViewModel = new ViewModelProvider(getActivity()).get(MediaPlayerViewModel.class);
         setId(view);
         setUpRecyclerView();
     }
@@ -73,10 +73,10 @@ public class VideoTabFragment extends Fragment {
     }
 
     BaseListAdapter.IEntryClicked onClickVideoInPlaylist = position -> {
-        playlistViewModel.getCurrentPlaylist().setValue(VideoRepository.getInstance().getVideoList());
-        playlistViewModel.getCurrentIndex().setValue(position);
+        mediaPlayerViewModel.getCurrentPlaylist().setValue(VideoRepository.getInstance().getVideoList());
+        mediaPlayerViewModel.getCurrentIndex().setValue(position);
         PlayingSong.getInstance().getMediaPlayer().stop();
-        playlistViewModel.getIsSong().setValue(false);
+        mediaPlayerViewModel.getIsSong().setValue(false);
         ((MainActivity) getActivity()).enterVideoPlayer();
     };
 }

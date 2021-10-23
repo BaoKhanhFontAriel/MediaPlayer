@@ -18,7 +18,7 @@ public class VideoButtonPanelFragment extends BaseButtonPanelFragment {
     public void setId(View view) {
         Log.d(TAG, "setId: ");
         super.setButtonPanelLayout(R.id.button_panel_layout, view);
-        super.setPauseButton(R.id.pause_mini_video_player, view);
+        super.setPauseButton(R.id.pause_mini_media_player, view);
         super.setNextButton(R.id.next_mini_player, view);
         super.setPrevButton(R.id.previous, view);
         super.setShuffleButton(R.id.shuffle, view);

@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.MediaPlayer.R;
-import com.example.MediaPlayer.ViewModel.PlaylistViewModel;
+import com.example.MediaPlayer.ViewModel.MediaPlayerViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -23,14 +23,14 @@ public class NormalVideoPlayerFragment extends Fragment {
     private PlaylistFragment playlistFragment;
     private VideoViewFragment videoViewFragment;
     private ProgressBarFragment progressBarFragment;
-    private PlaylistViewModel playlistViewModel;
+    private MediaPlayerViewModel mediaPlayerViewModel;
 
     public NormalVideoPlayerFragment(){}
 
     @Override
     public void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        playlistViewModel = new ViewModelProvider(requireActivity()).get(PlaylistViewModel.class);
+        mediaPlayerViewModel = new ViewModelProvider(requireActivity()).get(MediaPlayerViewModel.class);
         Log.d(TAG, "onCreate: ");
     }
 

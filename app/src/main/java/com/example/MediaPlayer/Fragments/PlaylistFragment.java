@@ -21,7 +21,7 @@ import com.example.MediaPlayer.Activity.MainActivity;
 import com.example.MediaPlayer.Adapter.VideoListAdapter;
 import com.example.MediaPlayer.Data.MediaEntry;
 import com.example.MediaPlayer.R;
-import com.example.MediaPlayer.ViewModel.PlaylistViewModel;
+import com.example.MediaPlayer.ViewModel.MediaPlayerViewModel;
 
 import java.util.ArrayList;
 
@@ -33,7 +33,7 @@ public class PlaylistFragment extends Fragment {
     private TextView videoName;
     private TextView playlistTitle;
 
-    private PlaylistViewModel playlistViewModel;
+    private MediaPlayerViewModel mediaPlayerViewModel;
     private VideoListAdapter videoAdapter;
     private Handler handler = new Handler(Looper.getMainLooper());
 
@@ -56,15 +56,15 @@ public class PlaylistFragment extends Fragment {
         View view = inflater.inflate(R.layout.playlist_layout, container, false);
         setId(view);
 
-        playlistViewModel = new ViewModelProvider(requireActivity()).get(PlaylistViewModel.class);
+        mediaPlayerViewModel = new ViewModelProvider(requireActivity()).get(MediaPlayerViewModel.class);
 
-        playlistViewModel.getCurrentPlaylist().observe(getViewLifecycleOwner(), currentPlaylist -> {
+        mediaPlayerViewModel.getCurrentPlaylist().observe(getViewLifecycleOwner(), currentPlaylist -> {
             Log.d(TAG, "getCurrentPlaylist observe: ");
             setupVideoRecycler((ArrayList<MediaEntry>) currentPlaylist);
             ((MainActivity) getActivity()).savePlaylist(currentPlaylist);
         });
 
-        playlistViewModel.getCurrentIndex().observe(getViewLifecycleOwner(), position -> {
+        mediaPlayerViewModel.getCurrentIndex().observe(getViewLifecycleOwner(), position -> {
             playlistRecycler.scrollToPosition(position);
             View itemView = playlistRecycler.getLayoutManager().findViewByPosition(position);
             if (itemView != null) {
@@ -100,7 +100,7 @@ public class PlaylistFragment extends Fragment {
     VideoListAdapter.IEntryClicked onClickVideoInPlaylist = new VideoListAdapter.IEntryClicked() {
         @Override
         public void onItemClicked(int position) {
-            playlistViewModel.getCurrentIndex().setValue(position);
+            mediaPlayerViewModel.getCurrentIndex().setValue(position);
         }
     };
 

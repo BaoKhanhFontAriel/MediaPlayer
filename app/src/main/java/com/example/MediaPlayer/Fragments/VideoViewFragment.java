@@ -13,15 +13,13 @@ import android.widget.RelativeLayout;
 import android.widget.VideoView;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.MediaPlayer.Activity.MainActivity;
-import com.example.MediaPlayer.Data.Utils;
 import com.example.MediaPlayer.Data.MediaEntry;
 import com.example.MediaPlayer.R;
-import com.example.MediaPlayer.ViewModel.PlaylistViewModel;
+import com.example.MediaPlayer.ViewModel.MediaPlayerViewModel;
 
 public class VideoViewFragment extends Fragment {
     public static String TAG = "VideoPlayerFragment";
@@ -29,7 +27,7 @@ public class VideoViewFragment extends Fragment {
 
     private VideoView videoView;
     private RelativeLayout videoLayout;
-    private PlaylistViewModel playlistViewModel;
+    private MediaPlayerViewModel mediaPlayerViewModel;
     Bundle bundle = new Bundle();
     Handler handler = new Handler(Looper.getMainLooper());
 
@@ -54,16 +52,16 @@ public class VideoViewFragment extends Fragment {
     }
 
     public void setUpPlaylistViewModel(VideoView videoView){
-        playlistViewModel = new ViewModelProvider(requireActivity()).get(PlaylistViewModel.class);
+        mediaPlayerViewModel = new ViewModelProvider(requireActivity()).get(MediaPlayerViewModel.class);
 
         videoView.setOnClickListener(v -> {
-            playlistViewModel.getIsVideoClicked().setValue(true);
+            mediaPlayerViewModel.getIsVideoClicked().setValue(true);
         });
 
-        playlistViewModel.getCurrentIndex().observe(getViewLifecycleOwner(), integer -> {
+        mediaPlayerViewModel.getCurrentIndex().observe(getViewLifecycleOwner(), integer -> {
             Log.d(TAG, "play video: ");
             if (integer != -1) {
-                MediaEntry videoEntry = playlistViewModel.getCurrentMediaEntry();
+                MediaEntry videoEntry = mediaPlayerViewModel.getCurrentMediaEntry();
                 videoView.setVideoURI(Uri.parse(videoEntry.getUri()));
                 videoView.seekTo(((MainActivity) getActivity()).getSavedVideoProcess(videoEntry.getMediaName()));
                 videoView.start();
@@ -71,7 +69,7 @@ public class VideoViewFragment extends Fragment {
             }
         });
 
-        playlistViewModel.getIsPauseSelected().observe(getViewLifecycleOwner(), (isPaused) -> {
+        mediaPlayerViewModel.getIsPauseSelected().observe(getViewLifecycleOwner(), (isPaused) -> {
             Log.d(TAG, "isPaused: " + isPaused);
             if (isPaused) {
                 Log.d(TAG, "pause: ");
@@ -84,7 +82,7 @@ public class VideoViewFragment extends Fragment {
             }
         });
 
-        playlistViewModel.getCurrentProcess().observe(getViewLifecycleOwner(), integer -> {
+        mediaPlayerViewModel.getCurrentProcess().observe(getViewLifecycleOwner(), integer -> {
 
             videoView.setOnCompletionListener((MediaPlayer.OnCompletionListener) mp -> {
                 Log.d(TAG, "complete: ");
@@ -94,12 +92,12 @@ public class VideoViewFragment extends Fragment {
             getParentFragmentManager().setFragmentResult("requestKey", bundle);
         });
 
-        playlistViewModel.getIsDragging().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+        mediaPlayerViewModel.getIsDragging().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean isSeekbarDragging) {
                 if (!isSeekbarDragging) {
                     handler.removeCallbacks(watchProgress);
-                    videoView.seekTo(playlistViewModel.getCurrentProcess().getValue());
+                    videoView.seekTo(mediaPlayerViewModel.getCurrentProcess().getValue());
                     handler.post(watchProgress);
                 }
             }
@@ -109,7 +107,7 @@ public class VideoViewFragment extends Fragment {
     Runnable watchProgress = new Runnable() {
         @Override
         public void run() {
-            playlistViewModel.getCurrentProcess().setValue(videoView.getCurrentPosition());
+            mediaPlayerViewModel.getCurrentProcess().setValue(videoView.getCurrentPosition());
             handler.post(watchProgress);
         }
     };

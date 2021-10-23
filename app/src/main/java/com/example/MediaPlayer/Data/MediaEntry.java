@@ -97,7 +97,7 @@ public class MediaEntry implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(this.id);
-        dest.writeString(this.uri.toString());
+        dest.writeString(this.uri);
         dest.writeString(this.display_name);
         dest.writeString(this.path);
         dest.writeString(this.MediaName);

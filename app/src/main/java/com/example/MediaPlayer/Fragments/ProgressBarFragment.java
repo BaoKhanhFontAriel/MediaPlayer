@@ -17,9 +17,8 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.example.MediaPlayer.Data.Utils;
 import com.example.MediaPlayer.R;
-import com.example.MediaPlayer.ViewModel.PlaylistViewModel;
+import com.example.MediaPlayer.ViewModel.MediaPlayerViewModel;
 
 import java.util.concurrent.TimeUnit;
 
@@ -31,7 +30,7 @@ public class ProgressBarFragment extends Fragment {
     private TextView runtime;
     private TextView duration;
     private LinearLayout progressBarLayout;
-    private PlaylistViewModel playlistViewModel;
+    private MediaPlayerViewModel mediaPlayerViewModel;
     private boolean isSeekbarDragged = false;
     private Handler handler = new Handler(Looper.getMainLooper());
     Bundle bundle = new Bundle();
@@ -52,7 +51,7 @@ public class ProgressBarFragment extends Fragment {
         setId(view);
 
         setUpViewModel();
-        playlistViewModel.getIsDragging().setValue(false);
+        mediaPlayerViewModel.getIsDragging().setValue(false);
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
@@ -65,14 +64,14 @@ public class ProgressBarFragment extends Fragment {
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
                 isSeekbarDragged = true;
-                playlistViewModel.getIsDragging().setValue(true);
+                mediaPlayerViewModel.getIsDragging().setValue(true);
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                playlistViewModel.getCurrentProcess().setValue(seekBar.getProgress());
+                mediaPlayerViewModel.getCurrentProcess().setValue(seekBar.getProgress());
                 isSeekbarDragged = false;
-                playlistViewModel.getIsDragging().setValue(false);
+                mediaPlayerViewModel.getIsDragging().setValue(false);
 
             }
         });
@@ -88,17 +87,17 @@ public class ProgressBarFragment extends Fragment {
     }
 
     public void setUpViewModel() {
-        playlistViewModel = new ViewModelProvider(requireActivity()).get(PlaylistViewModel.class);
+        mediaPlayerViewModel = new ViewModelProvider(requireActivity()).get(MediaPlayerViewModel.class);
 
-        playlistViewModel.getCurrentIndex().observe(getViewLifecycleOwner(), position -> {
-            seekBar.setMax(playlistViewModel.getCurrentMediaEntry().getDuration());
-            duration.setText(String.valueOf(convertToMinuteSecond(playlistViewModel.getCurrentMediaEntry().getDuration())));
+        mediaPlayerViewModel.getCurrentIndex().observe(getViewLifecycleOwner(), position -> {
+            seekBar.setMax(mediaPlayerViewModel.getCurrentMediaEntry().getDuration());
+            duration.setText(String.valueOf(convertToMinuteSecond(mediaPlayerViewModel.getCurrentMediaEntry().getDuration())));
         });
 
-        playlistViewModel.getCurrentProcess().observe(getViewLifecycleOwner(), integer -> {
+        mediaPlayerViewModel.getCurrentProcess().observe(getViewLifecycleOwner(), integer -> {
             if (!isSeekbarDragged) {
-                runtime.setText(convertToMinuteSecond(playlistViewModel.getCurrentProcess().getValue()));
-                seekBar.setProgress(playlistViewModel.getCurrentProcess().getValue());
+                runtime.setText(convertToMinuteSecond(mediaPlayerViewModel.getCurrentProcess().getValue()));
+                seekBar.setProgress(mediaPlayerViewModel.getCurrentProcess().getValue());
             }
         });
     }

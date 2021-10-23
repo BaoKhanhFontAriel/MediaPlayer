@@ -5,13 +5,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AlbumRepository {
     private static final String TAG = "AlbumRepository";
-
 
     private List<AlbumEntry> albumList = new ArrayList<>();
 
@@ -56,5 +56,4 @@ public class AlbumRepository {
             }
         }
     }
-
 }

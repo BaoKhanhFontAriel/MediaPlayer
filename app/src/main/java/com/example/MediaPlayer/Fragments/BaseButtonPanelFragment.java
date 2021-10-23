@@ -21,7 +21,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.MediaPlayer.Activity.MainActivity;
 import com.example.MediaPlayer.Data.Utils;
 import com.example.MediaPlayer.R;
-import com.example.MediaPlayer.ViewModel.PlaylistViewModel;
+import com.example.MediaPlayer.ViewModel.MediaPlayerViewModel;
 
 public class BaseButtonPanelFragment extends Fragment {
     private final static String TAG = "ButtonPanelFragment";
@@ -35,7 +35,7 @@ public class BaseButtonPanelFragment extends Fragment {
     private ImageButton playlistButton;
     private ImageButton fullscreenButton;
     private LinearLayout buttonPanelLayout;
-    private PlaylistViewModel playlistViewModel;
+    private MediaPlayerViewModel mediaPlayerViewModel;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
     private static final String KEY_PLAY_MODE = "KEY_PLAY_MODE";
@@ -85,7 +85,7 @@ public class BaseButtonPanelFragment extends Fragment {
     public void setupPauseButtonListener(){
         pauseButton.setOnClickListener(v -> {
             pauseButton.setSelected(!pauseButton.isSelected());
-            playlistViewModel.getIsPauseSelected().setValue(pauseButton.isSelected());
+            mediaPlayerViewModel.getIsPauseSelected().setValue(pauseButton.isSelected());
         });
     }
 
@@ -105,7 +105,7 @@ public class BaseButtonPanelFragment extends Fragment {
     public void setupShuffleButtonListener(){
         shuffleButton.setOnClickListener(v -> {
             shuffleButton.setSelected(!shuffleButton.isSelected());
-            playlistViewModel.getIsShuffleSelected().setValue(shuffleButton.isSelected());
+            mediaPlayerViewModel.getIsShuffleSelected().setValue(shuffleButton.isSelected());
         });
     }
     public void setupRepeatButtonListener(){
@@ -215,7 +215,7 @@ public class BaseButtonPanelFragment extends Fragment {
             // none is selected
             case 0:
                 Utils.isRepeatEnabled = false;
-                if (playlistViewModel.getIsShuffleSelected().getValue()) {
+                if (mediaPlayerViewModel.getIsShuffleSelected().getValue()) {
                     Utils.playMode = Utils.PLAY_MODE.SHUFFLE;
                 } else {
                     Utils.playMode = Utils.PLAY_MODE.AUTO_NEXT;
@@ -241,7 +241,7 @@ public class BaseButtonPanelFragment extends Fragment {
     }
 
     public void setUpPrevButton(){
-        if (playlistViewModel.getIsShuffleSelected().getValue()) {
+        if (mediaPlayerViewModel.getIsShuffleSelected().getValue()) {
             ((MainActivity) getActivity()).playPrevShuffleVideo();
             return;
         }
@@ -249,7 +249,7 @@ public class BaseButtonPanelFragment extends Fragment {
     }
 
     public void setUpNextButton(){
-        if (playlistViewModel.getIsShuffleSelected().getValue()) {
+        if (mediaPlayerViewModel.getIsShuffleSelected().getValue()) {
             ((MainActivity) getActivity()).playNextShuffleVideo();
             return;
         }
@@ -259,30 +259,29 @@ public class BaseButtonPanelFragment extends Fragment {
 
     public void setUpViewModel() {
         Log.d(TAG, "setUpViewModel: ");
-        playlistViewModel = new ViewModelProvider(requireActivity()).get(PlaylistViewModel.class);
+        mediaPlayerViewModel = new ViewModelProvider(requireActivity()).get(MediaPlayerViewModel.class);
     }
 
     public void observePause(){
-        playlistViewModel.getCurrentIndex().observe(getViewLifecycleOwner(), position -> {
-            pauseButton.setSelected(false);
+        mediaPlayerViewModel.getIsPauseSelected().observe(getViewLifecycleOwner(), isPause -> {
+            pauseButton.setSelected(isPause);
         });
-
     }
 
     public void observeShuffle(){
-        playlistViewModel.getIsShuffleSelected().observe(getViewLifecycleOwner(), (isSelected) -> {
+        mediaPlayerViewModel.getIsShuffleSelected().observe(getViewLifecycleOwner(), (isSelected) -> {
             setShuffleButton();
         });
     }
 
     public void observeBrowse(){
-        playlistViewModel.getIsFolderCreated().observe(getViewLifecycleOwner(), (isCreated) -> {
+        mediaPlayerViewModel.getIsFolderCreated().observe(getViewLifecycleOwner(), (isCreated) -> {
             browseButton.setEnabled(isCreated);
         });
     }
 
     public void observeFullscreen(){
-        playlistViewModel.getIsPauseSelected().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+        mediaPlayerViewModel.getIsPauseSelected().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean isPaused) {
                 pauseButton.setSelected(isPaused);
@@ -294,12 +293,12 @@ public class BaseButtonPanelFragment extends Fragment {
         Log.d(TAG, "setUpButtonPanel: ");
         Utils.playMode = Utils.PLAY_MODE.valueOf(sharedPreferences.getString(KEY_PLAY_MODE, "AUTO_NEXT"));
 
-        playlistViewModel.getIsShuffleSelected().setValue(sharedPreferences.getBoolean(KEY_SHUFFLE, false));
+        mediaPlayerViewModel.getIsShuffleSelected().setValue(sharedPreferences.getBoolean(KEY_SHUFFLE, false));
 
         repeatButtonMode = sharedPreferences.getInt(KEY_REPEAT_BUTTON, 0);
 //        setRepeatButton(repeatButtonMode);
 
-        playlistViewModel.getIsPauseSelected().setValue(sharedPreferences.getBoolean(KEY_PAUSE, true));
+        mediaPlayerViewModel.getIsPauseSelected().setValue(sharedPreferences.getBoolean(KEY_PAUSE, true));
 
         if (sharedPreferences.getBoolean(KEY_FULLSCREEN, false)) {
             fullscreenButton.performClick();
@@ -312,9 +311,9 @@ public class BaseButtonPanelFragment extends Fragment {
         Log.d(TAG, "saveButtonPanel: ");
         Log.d(TAG, "repeatButtonMode: " + repeatButtonMode);
         editor.putString(KEY_PLAY_MODE, Utils.playMode.toString());
-        editor.putBoolean(KEY_SHUFFLE, playlistViewModel.getIsShuffleSelected().getValue());
+        editor.putBoolean(KEY_SHUFFLE, mediaPlayerViewModel.getIsShuffleSelected().getValue());
         editor.putInt(KEY_REPEAT_BUTTON, repeatButtonMode);
-        editor.putBoolean(KEY_PAUSE, playlistViewModel.getIsPauseSelected().getValue());
+        editor.putBoolean(KEY_PAUSE, mediaPlayerViewModel.getIsPauseSelected().getValue());
         editor.putBoolean(KEY_FULLSCREEN, fullscreenButton.isSelected());
         editor.apply();
     }

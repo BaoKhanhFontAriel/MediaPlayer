@@ -21,7 +21,7 @@ import com.example.MediaPlayer.Adapter.TrackListAdapter;
 import com.example.MediaPlayer.Data.AudioRepository;
 import com.example.MediaPlayer.Data.MediaEntry;
 import com.example.MediaPlayer.R;
-import com.example.MediaPlayer.ViewModel.PlaylistViewModel;
+import com.example.MediaPlayer.ViewModel.MediaPlayerViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -31,7 +31,7 @@ public class AudioTrackTabFragment extends Fragment {
     RecyclerView recyclerView;
     TextView audioName;
     TrackListAdapter trackListAdapter;
-    PlaylistViewModel playlistViewModel;
+    MediaPlayerViewModel mediaPlayerViewModel;
 
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -45,7 +45,7 @@ public class AudioTrackTabFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         setId(view);
         setupVideoRecycler(AudioRepository.getInstance().getAudioList());
-        playlistViewModel = new ViewModelProvider(requireActivity()).get(PlaylistViewModel.class);
+        mediaPlayerViewModel = new ViewModelProvider(requireActivity()).get(MediaPlayerViewModel.class);
     }
 
 
@@ -71,11 +71,11 @@ public class AudioTrackTabFragment extends Fragment {
     TrackListAdapter.IEntryClicked onClickVideoInPlaylist = new TrackListAdapter.IEntryClicked() {
         @Override
         public void onItemClicked(int position) {
-            playlistViewModel.getIsPauseSelected().setValue(false);
-            playlistViewModel.getCurrentPlaylist().setValue(AudioRepository.getInstance().getAudioList());
-            playlistViewModel.getCurrentIndex().setValue(position);
-            playlistViewModel.getIsSong().setValue(true);
-            ((MainActivity)getActivity()).enterSongPlayer();
+            mediaPlayerViewModel.getIsPauseSelected().setValue(false);
+            mediaPlayerViewModel.getCurrentPlaylist().setValue(AudioRepository.getInstance().getAudioList());
+            mediaPlayerViewModel.getCurrentIndex().setValue(position);
+            mediaPlayerViewModel.getIsSong().setValue(true);
+            ((MainActivity)getActivity()).showSongPlayerFragment();
         }
     };
 }

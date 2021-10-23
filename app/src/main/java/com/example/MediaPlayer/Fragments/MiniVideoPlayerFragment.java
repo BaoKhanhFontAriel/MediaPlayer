@@ -1,6 +1,5 @@
 package com.example.MediaPlayer.Fragments;
 
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,14 +17,14 @@ import com.example.MediaPlayer.Activity.MainActivity;
 import com.example.MediaPlayer.Data.MediaEntry;
 import com.example.MediaPlayer.Data.VideoRepository;
 import com.example.MediaPlayer.R;
-import com.example.MediaPlayer.ViewModel.PlaylistViewModel;
+import com.example.MediaPlayer.ViewModel.MediaPlayerViewModel;
 
 import java.util.List;
 
 public class MiniVideoPlayerFragment extends BaseMiniPlayerFragment{
 
     private VideoView videoView;
-    PlaylistViewModel playlistViewModel;
+    MediaPlayerViewModel mediaPlayerViewModel;
 
     @Override
     public int getLayout() {
@@ -39,19 +38,19 @@ public class MiniVideoPlayerFragment extends BaseMiniPlayerFragment{
         ConstraintLayout video_mini_player = view.findViewById(R.id.video_controller_layout);
 
 
-        playlistViewModel = new ViewModelProvider(requireActivity()).get(PlaylistViewModel.class);
-        playlistViewModel.getCurrentIndex().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+        mediaPlayerViewModel = new ViewModelProvider(requireActivity()).get(MediaPlayerViewModel.class);
+        mediaPlayerViewModel.getCurrentIndex().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
                 handler.removeCallbacks(updateProgress);
                 videoView.setVideoURI(Uri.parse(MiniVideoPlayerFragment.super.getMedia().getUri()));
                 videoView.start();
-                videoView.seekTo(playlistViewModel.getCurrentProcess().getValue());
+                videoView.seekTo(mediaPlayerViewModel.getCurrentProcess().getValue());
                 handler.post(updateProgress);
             }
         });
 
-        playlistViewModel.getIsPauseSelected().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+        mediaPlayerViewModel.getIsPauseSelected().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
                 videoView.stopPlayback();
@@ -70,7 +69,7 @@ public class MiniVideoPlayerFragment extends BaseMiniPlayerFragment{
     Runnable updateProgress = new Runnable() {
         @Override
         public void run() {
-            playlistViewModel.getCurrentProcess().setValue(videoView.getCurrentPosition());
+            mediaPlayerViewModel.getCurrentProcess().setValue(videoView.getCurrentPosition());
         }
     };
 

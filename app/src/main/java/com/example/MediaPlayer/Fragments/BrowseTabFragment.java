@@ -22,7 +22,7 @@ import com.example.MediaPlayer.Data.VideoRepository;
 import com.example.MediaPlayer.Data.MediaEntry;
 import com.example.MediaPlayer.Data.VideoHistoryRepository;
 import com.example.MediaPlayer.R;
-import com.example.MediaPlayer.ViewModel.PlaylistViewModel;
+import com.example.MediaPlayer.ViewModel.MediaPlayerViewModel;
 
 import java.util.ArrayList;
 
@@ -39,7 +39,7 @@ public class BrowseTabFragment extends Fragment{
     private RecyclerView history_layout;
     private LinearLayout folder_layout;
     private LinearLayout artist_layout;
-    private PlaylistViewModel playlistViewModel;
+    private MediaPlayerViewModel mediaPlayerViewModel;
     private Handler handler;
 
 
@@ -57,7 +57,7 @@ public class BrowseTabFragment extends Fragment{
 
         displayVideoHistory();
 
-        playlistViewModel = new ViewModelProvider(requireActivity()).get(PlaylistViewModel.class);
+        mediaPlayerViewModel = new ViewModelProvider(requireActivity()).get(MediaPlayerViewModel.class);
 
         folder_layout.setOnClickListener(v -> {
           ((MainLayoutFragment) getParentFragment()).switchToFragment(new FolderTabFragment());

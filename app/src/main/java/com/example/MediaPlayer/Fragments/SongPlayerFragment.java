@@ -21,7 +21,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -29,7 +28,7 @@ import com.example.MediaPlayer.Activity.MainActivity;
 import com.example.MediaPlayer.Data.MediaEntry;
 import com.example.MediaPlayer.Data.Utils;
 import com.example.MediaPlayer.R;
-import com.example.MediaPlayer.ViewModel.PlaylistViewModel;
+import com.example.MediaPlayer.ViewModel.MediaPlayerViewModel;
 
 import java.io.IOException;
 
@@ -38,7 +37,7 @@ public class SongPlayerFragment extends Fragment {
     private ImageView thumbnail;
     private TextView song_name;
     private TextView artist;
-    private PlaylistViewModel playlistViewModel;
+    private MediaPlayerViewModel mediaPlayerViewModel;
     Bundle bundle = new Bundle();
     private MediaPlayer mediaPlayer = new MediaPlayer();
     private Handler handler = new Handler(Looper.getMainLooper());
@@ -74,7 +73,8 @@ public class SongPlayerFragment extends Fragment {
         playlist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                ((MainActivity)getActivity()).showBackButton();
+                ((MainActivity)getActivity()).addPlaylistFragment();
             }
         });
 
@@ -90,16 +90,16 @@ public class SongPlayerFragment extends Fragment {
     }
 
     public void setPlaylistViewModel(){
-        playlistViewModel = new ViewModelProvider(requireActivity()).get(PlaylistViewModel.class);
+        mediaPlayerViewModel = new ViewModelProvider(requireActivity()).get(MediaPlayerViewModel.class);
 
-        playlistViewModel.getCurrentIndex().observe(getViewLifecycleOwner(), integer -> {
+        mediaPlayerViewModel.getCurrentIndex().observe(getViewLifecycleOwner(), integer -> {
             Log.d(TAG, "play audio: ");
             if (integer != -1) {
-                MediaEntry audioEntry = playlistViewModel.getCurrentMediaEntry();
+                MediaEntry audioEntry = mediaPlayerViewModel.getCurrentMediaEntry();
                 song_name.setText(audioEntry.getMediaName());
                 artist.setText(audioEntry.getArtistName());
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    thumbnail.setImageBitmap(getThumbnail(Uri.parse(audioEntry.getUri())));
+                    thumbnail.setImageBitmap(Utils.getThumbnail(getContext(), Uri.parse(audioEntry.getUri()),  500, 500));
                 }
 
                 // clear all prev video process
@@ -109,9 +109,10 @@ public class SongPlayerFragment extends Fragment {
             }
         });
 
-        playlistViewModel.getIsPauseSelected().observe(getViewLifecycleOwner(), (isPaused) -> {
+        mediaPlayerViewModel.getIsPauseSelected().observe(getViewLifecycleOwner(), (isPaused) -> {
             if (isPaused) {
                 Log.d(TAG, "pause: ");
+
                 PlayingSong.getInstance().getMediaPlayer().pause();
                 handler.removeCallbacks(watchProgress);
             } else {
@@ -121,7 +122,7 @@ public class SongPlayerFragment extends Fragment {
             }
         });
 
-        playlistViewModel.getCurrentProcess().observe(getViewLifecycleOwner(), integer -> {
+        mediaPlayerViewModel.getCurrentProcess().observe(getViewLifecycleOwner(), integer -> {
             PlayingSong.getInstance().getMediaPlayer().setOnCompletionListener((MediaPlayer.OnCompletionListener) mp -> {
                 Log.d(TAG, "complete: ");
                 ((MainActivity) getActivity()).onVideoCompleted();
@@ -130,12 +131,12 @@ public class SongPlayerFragment extends Fragment {
             getParentFragmentManager().setFragmentResult("requestKey", bundle);
         });
 
-        playlistViewModel.getIsDragging().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+        mediaPlayerViewModel.getIsDragging().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean isSeekbarDragging) {
                 if (!isSeekbarDragging) {
                     handler.removeCallbacks(watchProgress);
-                    PlayingSong.getInstance().getMediaPlayer().seekTo(playlistViewModel.getCurrentProcess().getValue());
+                    PlayingSong.getInstance().getMediaPlayer().seekTo(mediaPlayerViewModel.getCurrentProcess().getValue());
                     handler.post(watchProgress);
                 }
             }
@@ -145,22 +146,8 @@ public class SongPlayerFragment extends Fragment {
     Runnable watchProgress = new Runnable() {
         @Override
         public void run() {
-            playlistViewModel.getCurrentProcess().setValue(PlayingSong.getInstance().getMediaPlayer().getCurrentPosition());
+            mediaPlayerViewModel.getCurrentProcess().setValue(PlayingSong.getInstance().getMediaPlayer().getCurrentPosition());
             handler.post(watchProgress);
         }
     };
-
-    @RequiresApi(api = Build.VERSION_CODES.Q)
-    public Bitmap getThumbnail(Uri uri) {
-        Size mSize = new Size(200, 120);
-        CancellationSignal ca = new CancellationSignal();
-        Bitmap thumb = null;
-        try {
-            thumb = getContext().getContentResolver().loadThumbnail(uri, mSize, ca);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return thumb;
-    }
-
 }

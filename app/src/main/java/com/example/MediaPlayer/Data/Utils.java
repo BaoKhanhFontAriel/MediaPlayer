@@ -62,4 +62,15 @@ public class Utils {
                                 duration)));
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    public static Bitmap getThumbnail(Context context, Uri uri, int width, int height){
+        Bitmap thumb = null;
+        try {
+            thumb = context.getContentResolver().loadThumbnail(uri, new Size(width, height), new CancellationSignal());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return thumb;
+    }
+
 }
