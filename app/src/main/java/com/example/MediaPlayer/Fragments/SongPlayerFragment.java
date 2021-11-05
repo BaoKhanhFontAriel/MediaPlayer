@@ -1,15 +1,12 @@
 package com.example.MediaPlayer.Fragments;
 
-import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.CancellationSignal;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +16,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -29,8 +25,6 @@ import com.example.MediaPlayer.Data.MediaEntry;
 import com.example.MediaPlayer.Data.Utils;
 import com.example.MediaPlayer.R;
 import com.example.MediaPlayer.ViewModel.MediaPlayerViewModel;
-
-import java.io.IOException;
 
 public class SongPlayerFragment extends Fragment {
     private static final String TAG = "SongPlayerFragment";
@@ -50,7 +44,7 @@ public class SongPlayerFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.audio_player_layout, container, false);
+        return inflater.inflate(R.layout.song_player_layout, container, false);
     }
 
     @Override
@@ -73,7 +67,6 @@ public class SongPlayerFragment extends Fragment {
         playlist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).showBackButton();
                 ((MainActivity)getActivity()).addPlaylistFragment();
             }
         });

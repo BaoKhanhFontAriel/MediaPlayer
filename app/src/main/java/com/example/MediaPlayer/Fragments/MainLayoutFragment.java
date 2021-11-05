@@ -122,6 +122,16 @@ public class MainLayoutFragment extends Fragment {
                 .commit();
     }
 
+    private SongArtistFragment songArtistFragment;
+    public void showSongArtistFragment() {
+        Log.d(TAG, "showAlbumSongsFragment: ");
+        songArtistFragment = new SongArtistFragment();
+        getChildFragmentManager().beginTransaction()
+                .add(R.id.main_app_layout_fragment, songArtistFragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
     private GenrePlaylistFragment genrePlaylistFragment;
     public void showGenreSongsFragment() {
         genrePlaylistFragment = new GenrePlaylistFragment();
@@ -137,6 +147,11 @@ public class MainLayoutFragment extends Fragment {
     public void hideAlbumSongsFragment() {
         getChildFragmentManager().popBackStack();
     }
+
+    public void hideSongArtistFragment() {
+        getChildFragmentManager().popBackStack();
+    }
+
 
     private BottomNavigationView bottomNavigationView;
 

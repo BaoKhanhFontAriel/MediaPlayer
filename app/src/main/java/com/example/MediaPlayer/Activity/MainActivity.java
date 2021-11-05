@@ -20,8 +20,8 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.MediaPlayer.Data.AlbumRepository;
-import com.example.MediaPlayer.Data.AudioArtistRepository;
-import com.example.MediaPlayer.Data.AudioRepository;
+import com.example.MediaPlayer.Data.SongArtistRepository;
+import com.example.MediaPlayer.Data.SongRepository;
 import com.example.MediaPlayer.Data.FolderRepository;
 import com.example.MediaPlayer.Data.GenreRepository;
 import com.example.MediaPlayer.Data.Utils;
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         registerReceiver(broadcastReceiver, intentFilter);
 
         setUpMainAppLayout();
-        hideBackButton();
+//        hideBackButton();
         handler.post(makeFolderTree);
 
         setUpViewModel();
@@ -98,19 +98,10 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void run() {
             Log.d(TAG, "makeFolderTree: ");
-            FolderRepository.getInstance().makeFolderTree();
+            FolderRepository.getInstance().makeFolderTree(getApplicationContext());
             mediaPlayerViewModel.getIsFolderCreated().setValue(true);
         }
     };
-
-    public void showBackButton() {
-       getSupportActionBar().setHomeAsUpIndicator(R.drawable.back_button);// set drawable icon
-       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
-
-    public void hideBackButton(){
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-    }
 
     AlbumSongsFragment albumSongsFragment;
     Runnable initFragments = new Runnable() {
@@ -159,12 +150,12 @@ public class MainActivity extends AppCompatActivity {
         if (checkPermission()) {
             // set up video repos
             VideoRepository.getInstance().getAllVideos(this);
-            AudioRepository.getInstance().getAudioList(this);
+            SongRepository.getInstance().getAudioList(this);
             GenreRepository.getInstance().getGenre(this);
-            AudioArtistRepository.getInstance().getAllArtists(this);
+            SongArtistRepository.getInstance().getAllArtists(this);
             AlbumRepository.getInstance().getAllAlbums(this);
             Log.d(TAG, "VideoRepository: " + VideoRepository.getInstance().getVideoList().size());
-            Log.d(TAG, "AudioRepository: " + AudioRepository.getInstance().getAudioList().size());
+            Log.d(TAG, "AudioRepository: " + SongRepository.getInstance().getAudioList().size());
         }
     }
 

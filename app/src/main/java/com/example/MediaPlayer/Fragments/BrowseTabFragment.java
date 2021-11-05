@@ -64,7 +64,7 @@ public class BrowseTabFragment extends Fragment{
         });
 
         artist_layout.setOnClickListener(v -> {
-            ((MainLayoutFragment) getParentFragment()).switchToFragment(new ArtistFragment());
+            ((MainLayoutFragment) getParentFragment()).switchToFragment(new ArtistTabFragment());
         });
 
         return view;

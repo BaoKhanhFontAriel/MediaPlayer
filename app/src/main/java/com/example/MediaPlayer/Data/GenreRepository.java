@@ -99,11 +99,11 @@ public class GenreRepository {
                 String album = songCursor.getString(albumColumn);
                 String volume = songCursor.getString(volumeColumn);
                 Uri contentUri = ContentUris.withAppendedId(
-                        collection, id);
+                        collection, songId);
                 songs.add(new MediaEntry(songId, contentUri.toString(), displayName, path, name, artist, album, duration, volume));
             }
         }
-        Log.d(TAG, "songs.size: " + songs.size());
+
         return songs;
     }
 }

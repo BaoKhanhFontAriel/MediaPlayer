@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.example.MediaPlayer.Fragments.AlbumTabFragment;
-import com.example.MediaPlayer.Fragments.ArtistFragment;
+import com.example.MediaPlayer.Fragments.ArtistTabFragment;
 import com.example.MediaPlayer.Fragments.GenreTabFragment;
 import com.example.MediaPlayer.Fragments.AudioTrackTabFragment;
 
@@ -23,7 +23,7 @@ public class AudioPagerAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         switch (position){
             case 1: return new AlbumTabFragment();
-            case 2: return new ArtistFragment();
+            case 2: return new ArtistTabFragment();
             case 3: return new GenreTabFragment();
         }
         return new AudioTrackTabFragment();

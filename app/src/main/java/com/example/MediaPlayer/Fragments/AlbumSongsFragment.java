@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -24,7 +25,7 @@ import com.example.MediaPlayer.Activity.MainActivity;
 import com.example.MediaPlayer.Adapter.AlbumSongsListAdapter;
 import com.example.MediaPlayer.Adapter.BaseListAdapter;
 import com.example.MediaPlayer.Data.AlbumEntry;
-import com.example.MediaPlayer.Data.AudioRepository;
+import com.example.MediaPlayer.Data.SongRepository;
 import com.example.MediaPlayer.Data.MediaEntry;
 import com.example.MediaPlayer.Data.Utils;
 import com.example.MediaPlayer.R;
@@ -43,6 +44,7 @@ public class AlbumSongsFragment extends Fragment {
     private ImageView album_thumbnail;
     private RecyclerView recyclerView;
     private List<MediaEntry> songsWithin;
+    private Toolbar toolbar;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,7 +62,11 @@ public class AlbumSongsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initView(view);
+        setUpViewModel();
+        initBackPressed();
+    }
 
+    public void setUpViewModel(){
         mediaPlayerViewModel = new ViewModelProvider(requireActivity()).get(MediaPlayerViewModel.class);
         mediaPlayerViewModel.getAlbumEntryMutableLiveData().observe(getViewLifecycleOwner(), new Observer<AlbumEntry>() {
             @Override
@@ -71,7 +77,7 @@ public class AlbumSongsFragment extends Fragment {
                     album_thumbnail.setImageBitmap(Utils.getThumbnail(getContext(), albumEntry.getUri(), 521, 384));
                 }
 
-                songsWithin = AudioRepository.getInstance().getFilteredAudio(getContext(),
+                songsWithin = SongRepository.getInstance().getFilteredAudio(getContext(),
                         MediaStore.Audio.Media.ALBUM,
                         albumEntry.getAlbum());
 
@@ -84,17 +90,17 @@ public class AlbumSongsFragment extends Fragment {
                 recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
             }
         });
+    }
 
+    public void initBackPressed(){
         OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
             @Override
             public void handleOnBackPressed() {
-                ((MainActivity)getActivity()).hideBackButton();
                 ((MainLayoutFragment) getParentFragment()).showNavigationBar();
                 ((MainLayoutFragment) getParentFragment()).hideAlbumSongsFragment();
             }
         };
-        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
-
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
     }
 
     public void initView(View view){
@@ -102,6 +108,10 @@ public class AlbumSongsFragment extends Fragment {
         album_artist_name = view.findViewById(R.id.album_artist_name);
         recyclerView = view.findViewById(R.id.recyclerview_album);
         album_thumbnail = view.findViewById(R.id.album_thumbnail);
+        toolbar = (Toolbar)view.findViewById(R.id.album_toolbar);
+        ((MainActivity) getActivity()).setSupportActionBar(toolbar);
+        ((MainActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((MainActivity)getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.back_button);
     }
 
     @Override
@@ -109,7 +119,6 @@ public class AlbumSongsFragment extends Fragment {
         Log.d("TAG", "onOptionsItemSelected: " + item.getItemId());
 
         if (item.getItemId() == android.R.id.home) {
-            ((MainActivity)getActivity()).hideBackButton();
             ((MainLayoutFragment) getParentFragment()).showNavigationBar();
             ((MainLayoutFragment) getParentFragment()).hideAlbumSongsFragment();
         }

@@ -11,17 +11,17 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AudioRepository {
+public class SongRepository {
     private static final String TAG = "AudioRepository";
 
     private ArrayList<MediaEntry> audioList = new ArrayList<>();
     private ArrayList<MediaEntry> filteredAudioList = new ArrayList<>();
 
-    private static AudioRepository instance;
+    private static SongRepository instance;
 
-    public static AudioRepository getInstance() {
+    public static SongRepository getInstance() {
         if (instance == null) {
-            instance = new AudioRepository();
+            instance = new SongRepository();
         }
         return instance;
     }

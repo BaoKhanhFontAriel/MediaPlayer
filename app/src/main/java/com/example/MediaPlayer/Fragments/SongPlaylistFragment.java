@@ -52,7 +52,6 @@ public class SongPlaylistFragment extends Fragment {
         OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
             @Override
             public void handleOnBackPressed() {
-                ((MainActivity)getActivity()).hideBackButton();
                 ((MainLayoutFragment) getParentFragment().getParentFragment()).showNavigationBar();
                 ((MainLayoutFragment) getParentFragment()).hideAlbumSongsFragment();
             }
@@ -91,7 +90,6 @@ public class SongPlaylistFragment extends Fragment {
         Log.d("TAG", "onOptionsItemSelected: " + item.getItemId());
 
         if (item.getItemId() == android.R.id.home) {
-            ((MainActivity)getActivity()).hideBackButton();
             ((MainLayoutFragment) getParentFragment()).showNavigationBar();
             ((MainLayoutFragment) getParentFragment()).hideAlbumSongsFragment();
         }

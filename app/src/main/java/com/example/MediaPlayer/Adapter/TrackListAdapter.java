@@ -2,6 +2,7 @@ package com.example.MediaPlayer.Adapter;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Build;
 
 import com.example.MediaPlayer.Data.MediaEntry;
 import com.example.MediaPlayer.R;
@@ -27,7 +28,9 @@ public class TrackListAdapter extends BaseListAdapter {
         holder.title.setText(audio.getMediaName());
         String artistAndDuration = audio.getArtistName() + " - " + convertTime(audio.getDuration());
         holder.detail.setText(artistAndDuration);
-        holder.thumbnail.setImageBitmap(getThumbnail(Uri.parse(audio.getUri())));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            holder.thumbnail.setImageBitmap(getThumbnail(Uri.parse(audio.getUri())));
+        }
     }
 
     @Override

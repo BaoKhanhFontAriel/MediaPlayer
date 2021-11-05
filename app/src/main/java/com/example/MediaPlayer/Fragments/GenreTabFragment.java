@@ -71,7 +71,6 @@ public class GenreTabFragment extends Fragment {
     BaseListAdapter.IEntryClicked clicked = position -> {
         mediaPlayerViewModel.getGenreSongEntryMutableLiveData().setValue(GenreRepository.getInstance().getGenreList().get(position).getSongs_within());
         ((MainLayoutFragment) getParentFragment().getParentFragment()).hideNavigationBar();
-        ((MainActivity) getActivity()).showBackButton();
         ((MainLayoutFragment) getParentFragment().getParentFragment()).showGenreSongsFragment();
     };
 }

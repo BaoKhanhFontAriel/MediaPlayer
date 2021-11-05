@@ -9,14 +9,14 @@ import android.provider.MediaStore;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AudioArtistRepository {
+public class SongArtistRepository {
     private List<ArtistEntry> artistList = new ArrayList<>();
 
-    private static AudioArtistRepository instance;
+    private static SongArtistRepository instance;
 
-    public static AudioArtistRepository getInstance() {
+    public static SongArtistRepository getInstance() {
         if (instance == null) {
-            instance = new AudioArtistRepository();
+            instance = new SongArtistRepository();
         }
         return instance;
     }

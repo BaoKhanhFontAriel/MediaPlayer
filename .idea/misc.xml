@@ -20,6 +20,9 @@
         <entry key="..\:/Documents/Android projects/MediaPlayer/app/src/main/res/drawable/shuffle_state.xml" value="0.21354166666666666" />
         <entry key="..\:/Documents/Android projects/MediaPlayer/app/src/main/res/layout-land/main_app_layout.xml" value="0.34144144144144145" />
         <entry key="..\:/Documents/Android projects/MediaPlayer/app/src/main/res/layout/activity_main.xml" value="0.19739583333333333" />
+        <entry key="..\:/Documents/Android projects/MediaPlayer/app/src/main/res/layout/album_item_artist_frag.xml" value="0.3546875" />
+        <entry key="..\:/Documents/Android projects/MediaPlayer/app/src/main/res/layout/album_item_ui.xml" value="0.3546875" />
+        <entry key="..\:/Documents/Android projects/MediaPlayer/app/src/main/res/layout/album_song_item_ui.xml" value="0.3546875" />
         <entry key="..\:/Documents/Android projects/MediaPlayer/app/src/main/res/layout/alnum_song_ui.xml" value="0.75" />
         <entry key="..\:/Documents/Android projects/MediaPlayer/app/src/main/res/layout/alnum_ui.xml" value="0.5" />
         <entry key="..\:/Documents/Android projects/MediaPlayer/app/src/main/res/layout/artist_by_video_layout.xml" value="0.3546875" />
@@ -29,6 +32,7 @@
         <entry key="..\:/Documents/Android projects/MediaPlayer/app/src/main/res/layout/audio_tab_fragment.xml" value="0.19739583333333333" />
         <entry key="..\:/Documents/Android projects/MediaPlayer/app/src/main/res/layout/folder_layout.xml" value="0.19739583333333333" />
         <entry key="..\:/Documents/Android projects/MediaPlayer/app/src/main/res/layout/fragment_folder.xml" value="0.19739583333333333" />
+        <entry key="..\:/Documents/Android projects/MediaPlayer/app/src/main/res/layout/genre_song_playlist_fragment_layout.xml" value="0.3546875" />
         <entry key="..\:/Documents/Android projects/MediaPlayer/app/src/main/res/layout/main_app_layout.xml" value="0.35052083333333334" />
         <entry key="..\:/Documents/Android projects/MediaPlayer/app/src/main/res/layout/mini_player_layout.xml" value="0.3546875" />
         <entry key="..\:/Documents/Android projects/MediaPlayer/app/src/main/res/layout/mini_song_player_layout.xml" value="0.3546875" />
@@ -39,9 +43,13 @@
         <entry key="..\:/Documents/Android projects/MediaPlayer/app/src/main/res/layout/panel_bar_layout.xml" value="0.67" />
         <entry key="..\:/Documents/Android projects/MediaPlayer/app/src/main/res/layout/playlist_layout.xml" value="0.3546875" />
         <entry key="..\:/Documents/Android projects/MediaPlayer/app/src/main/res/layout/scrollview_album_songs_layout.xml" value="0.19739583333333333" />
+        <entry key="..\:/Documents/Android projects/MediaPlayer/app/src/main/res/layout/scrollview_song_artist_layout.xml" value="0.19739583333333333" />
         <entry key="..\:/Documents/Android projects/MediaPlayer/app/src/main/res/layout/song_album_layout.xml" value="0.33" />
+        <entry key="..\:/Documents/Android projects/MediaPlayer/app/src/main/res/layout/song_artist_layout.xml" value="0.378125" />
         <entry key="..\:/Documents/Android projects/MediaPlayer/app/src/main/res/layout/song_button_panel.xml" value="0.5" />
+        <entry key="..\:/Documents/Android projects/MediaPlayer/app/src/main/res/layout/song_player_layout.xml" value="0.3546875" />
         <entry key="..\:/Documents/Android projects/MediaPlayer/app/src/main/res/layout/song_playlist_fragment.xml" value="0.3546875" />
+        <entry key="..\:/Documents/Android projects/MediaPlayer/app/src/main/res/layout/song_tab_fragment.xml" value="0.1859375" />
         <entry key="..\:/Documents/Android projects/MediaPlayer/app/src/main/res/layout/video_entry_ui.xml" value="0.3546875" />
         <entry key="..\:/Documents/Android projects/MediaPlayer/app/src/main/res/layout/video_folder_grid_ui.xml" value="0.3546875" />
         <entry key="..\:/Documents/Android projects/MediaPlayer/app/src/main/res/layout/video_fragment.xml" value="0.3546875" />

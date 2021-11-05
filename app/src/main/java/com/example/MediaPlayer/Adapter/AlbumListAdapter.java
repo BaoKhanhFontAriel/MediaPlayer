@@ -17,7 +17,7 @@ public class AlbumListAdapter extends BaseListAdapter{
     public AlbumListAdapter(IEntryClicked callback, Context context, List<AlbumEntry> albumEntries) {
         super(callback, context);
         this.albumEntries = albumEntries;
-        setLayoutId(R.layout.alnum_ui);
+        setLayoutId(R.layout.album_item_ui);
         setTitleId(R.id.album_name);
         setDetailId(R.id.album_artist);
         setThumbnailId(R.id.album_thumb);

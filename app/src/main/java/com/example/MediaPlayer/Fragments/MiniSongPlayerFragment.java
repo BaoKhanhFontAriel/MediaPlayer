@@ -16,7 +16,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.MediaPlayer.Activity.MainActivity;
-import com.example.MediaPlayer.Data.AudioRepository;
+import com.example.MediaPlayer.Data.SongRepository;
 import com.example.MediaPlayer.Data.MediaEntry;
 import com.example.MediaPlayer.Data.Utils;
 import com.example.MediaPlayer.R;
@@ -79,6 +79,6 @@ public class MiniSongPlayerFragment extends BaseMiniPlayerFragment{
     @Override
     public List<MediaEntry> getMediaList() {
         Log.d(TAG, "getMediaList: ");
-        return AudioRepository.getInstance().getAudioList();
+        return SongRepository.getInstance().getAudioList();
     }
 }

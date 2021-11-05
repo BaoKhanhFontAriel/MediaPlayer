@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -46,6 +47,8 @@ public class AlbumTabFragment extends Fragment {
 
     private void setId(View view) {
         recyclerView = view.findViewById(R.id.playlist_recycler);
+        Toolbar toolbar = view.findViewById(R.id.song_tab_toolbar);
+        ((MainActivity) getActivity()).setSupportActionBar(toolbar);
     }
 
     private void setRecyclerView() {
@@ -59,7 +62,6 @@ public class AlbumTabFragment extends Fragment {
         public void onItemClicked(int position) {
             mediaPlayerViewModel.getAlbumEntryMutableLiveData().setValue(AlbumRepository.getInstance().getAlbumList().get(position));
             ((MainLayoutFragment) getParentFragment().getParentFragment()).hideNavigationBar();
-            ((MainActivity) getActivity()).showBackButton();
             ((MainLayoutFragment) getParentFragment().getParentFragment()).showAlbumSongsFragment();
         }
     };

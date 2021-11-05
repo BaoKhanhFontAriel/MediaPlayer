@@ -1,5 +1,11 @@
 package com.example.MediaPlayer.Data;
 
+import android.content.ContentProvider;
+import android.content.Context;
+import android.net.Uri;
+import android.util.Log;
+
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class FolderRepository {
@@ -15,14 +21,18 @@ public class FolderRepository {
         return instance;
     }
 
-    public void makeFolderTree() {
-        addVideoToFolder();
+    public void makeFolderTree(Context context) {
+        try {
+            addVideoToFolder(context);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         createFolders();
         addChildFolderToParentFolder(getParentFolders());
     }
 
 
-    public void addVideoToFolder() {
+    public void addVideoToFolder(Context context) throws FileNotFoundException {
         ArrayList<TreeNode<String>> parents = new ArrayList<>();
         ArrayList<String> paths = new ArrayList<>();
 
@@ -31,8 +41,9 @@ public class FolderRepository {
 
             MediaEntry videoEntry = VideoRepository.getInstance().getVideoList().get(i);
 
-
+//            String fullPath = context.getContentResolver().openAssetFileDescriptor(Uri.parse(videoEntry.getUri()),  "r");
             String fullPath = videoEntry.getVolumeName() + "/" + videoEntry.getPath() + videoEntry.getDisplay_name();
+            Log.d(TAG, "addVideoToFolder: " + videoEntry.getUri());
 
             TreeNode<String> video = new TreeNode<>(fullPath);
             video.setVideoPosition(i);

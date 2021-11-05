@@ -16,35 +16,42 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.067"
-        tools:srcCompat="@tools:sample/avatars" />
+        tools:srcCompat="@tools:sample/avatars"
+        android:scaleType="centerCrop"/>
 
     <TextView
         android:id="@+id/song_name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="TextView"
-        android:textSize="25sp"
         android:textColor="@color/teal_200"
+        android:textSize="25sp"
         app:layout_constraintBottom_toTopOf="@+id/song_artist"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/progress_bar"
         app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/progress_bar"
         app:layout_constraintTop_toBottomOf="@+id/audio_thumbnail"
-        app:layout_constraintVertical_bias="0.813" />
+        app:layout_constraintVertical_bias="0.813"
+        android:textAlignment="center"
+        android:singleLine="true"
+        android:ellipsize="none"/>
 
     <TextView
         android:id="@+id/song_artist"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="TextView"
+        android:textColor="@color/white"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/song_name"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/song_name"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.72"
-        android:textColor="@color/white"/>
+        android:textAlignment="center"
+        android:singleLine="true"
+        android:ellipsize="end"/>
 
     <ImageButton
         android:id="@+id/browse_button"
@@ -52,8 +59,6 @@
         android:layout_height="45dp"
         android:background="@drawable/round_select_state_with_transparent_default"
         android:scaleType="center"
-        android:scaleX="1.5"
-        android:scaleY="1.5"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.109"
@@ -70,8 +75,6 @@
         android:background="@drawable/round_select_state_with_transparent_default"
         android:backgroundTintMode="multiply"
         android:scaleType="center"
-        android:scaleX="1.5"
-        android:scaleY="1.5"
         app:layout_constraintBottom_toBottomOf="@+id/browse_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/browse_button"

@@ -2,7 +2,6 @@ package com.example.MediaPlayer.Fragments;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,13 +12,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.MediaPlayer.Adapter.BaseListAdapter;
 import com.example.MediaPlayer.Adapter.MusicArtistListAdapter;
-import com.example.MediaPlayer.Data.AudioArtistRepository;
+import com.example.MediaPlayer.Data.SongArtistRepository;
 import com.example.MediaPlayer.R;
 import com.example.MediaPlayer.ViewModel.MediaPlayerViewModel;
 
@@ -27,20 +27,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class ArtistFragment extends Fragment {
+public class ArtistTabFragment extends Fragment {
     private static final String TAG = "ArtistFragment";
 
     private TextView browse_by_artist;
     private LinearLayout arrow_button;
-    private RecyclerView artistGridView;
+    private RecyclerView recyclerView;
     private ArrayList<String> artists = new ArrayList<>();
     MediaPlayerViewModel mediaPlayerViewModel;
-    public static final String ARG_OBJECT = "object";
-
-    @Override
-    public void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -48,48 +42,46 @@ public class ArtistFragment extends Fragment {
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater,
                              @Nullable @org.jetbrains.annotations.Nullable ViewGroup container,
                              @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-
-        View view = inflater.inflate(R.layout.playlist_layout, container, false);
-        setId(view);
-//        playlistViewModel = new ViewModelProvider(requireActivity()).get(PlaylistViewModel.class);
-
-        setUpArtistView();
-
-//        arrow_button.setOnClickListener(v -> {
-//            getParentFragmentManager().popBackStack("fragmentBrowse", 0);
-//        });
-
-        return view;
+        return inflater.inflate(R.layout.playlist_layout, container, false);
     }
 
-    private void setId(View view) {
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        initView(view);
+        initViewModel();
+        setUpRecyvclerView();
+    }
+
+    private void initView(View view) {
         browse_by_artist = view.findViewById(R.id.browse_by_artists);
         arrow_button = view.findViewById(R.id.arrow);
-        artistGridView = view.findViewById(R.id.playlist_recycler);
+        recyclerView = view.findViewById(R.id.playlist_recycler);
     }
 
-    private void setUpArtistView() {
-        MusicArtistListAdapter adapter = new MusicArtistListAdapter(AudioArtistRepository.getInstance().getArtistList(), clicked, getActivity());
-        artistGridView.setLayoutManager(new LinearLayoutManager(getContext()));
-        artistGridView.setAdapter(adapter);
+    private void initViewModel(){
+        mediaPlayerViewModel = new ViewModelProvider(requireActivity()).get(MediaPlayerViewModel.class);
+    }
 
-        DividerItemDecoration horizontalDecoration = new DividerItemDecoration(artistGridView.getContext(),
+    private void setUpRecyvclerView() {
+        MusicArtistListAdapter adapter = new MusicArtistListAdapter(SongArtistRepository.getInstance().getArtistList(), clicked, getActivity());
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(adapter);
+
+        DividerItemDecoration horizontalDecoration = new DividerItemDecoration(recyclerView.getContext(),
                 DividerItemDecoration.VERTICAL);
-        Drawable horizontalDivider = ContextCompat.getDrawable(artistGridView.getContext(), R.drawable.horizontal_divider);
+        Drawable horizontalDivider = ContextCompat.getDrawable(recyclerView.getContext(), R.drawable.horizontal_divider);
         horizontalDecoration.setDrawable(horizontalDivider);
-        artistGridView.addItemDecoration(horizontalDecoration);
-
-        artistGridView.setLayoutManager(new LinearLayoutManager(artistGridView.getContext()));
+        recyclerView.addItemDecoration(horizontalDecoration);
+        recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
     }
 
     BaseListAdapter.IEntryClicked clicked = new BaseListAdapter.IEntryClicked() {
         @Override
         public void onItemClicked(int position) {
-//        playlistViewModel.getArtistName().setValue(artists.get(position));
-//        ((MiniPlayerFragment) getParentFragment()).switchToFragment(new VideoByArtistFragment());
+            mediaPlayerViewModel.getArtistName().setValue(SongArtistRepository.getInstance().getArtistList().get(position).getArtist());
+            ((MainLayoutFragment) getParentFragment().getParentFragment()).hideNavigationBar();
+            ((MainLayoutFragment) getParentFragment().getParentFragment()).showSongArtistFragment();
+
         }
     };
-
-    private Handler handler;
 }

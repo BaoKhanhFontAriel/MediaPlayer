@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.MediaPlayer.Activity.MainActivity;
 import com.example.MediaPlayer.Adapter.TrackListAdapter;
-import com.example.MediaPlayer.Data.AudioRepository;
+import com.example.MediaPlayer.Data.SongRepository;
 import com.example.MediaPlayer.Data.MediaEntry;
 import com.example.MediaPlayer.R;
 import com.example.MediaPlayer.ViewModel.MediaPlayerViewModel;
@@ -44,7 +44,7 @@ public class AudioTrackTabFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setId(view);
-        setupVideoRecycler(AudioRepository.getInstance().getAudioList());
+        setupVideoRecycler(SongRepository.getInstance().getAudioList());
         mediaPlayerViewModel = new ViewModelProvider(requireActivity()).get(MediaPlayerViewModel.class);
     }
 
@@ -72,7 +72,7 @@ public class AudioTrackTabFragment extends Fragment {
         @Override
         public void onItemClicked(int position) {
             mediaPlayerViewModel.getIsPauseSelected().setValue(false);
-            mediaPlayerViewModel.getCurrentPlaylist().setValue(AudioRepository.getInstance().getAudioList());
+            mediaPlayerViewModel.getCurrentPlaylist().setValue(SongRepository.getInstance().getAudioList());
             mediaPlayerViewModel.getCurrentIndex().setValue(position);
             mediaPlayerViewModel.getIsSong().setValue(true);
             ((MainActivity)getActivity()).showSongPlayerFragment();

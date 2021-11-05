@@ -56,4 +56,38 @@ public class AlbumRepository {
             }
         }
     }
+
+    public ArrayList<AlbumEntry> filterArtist(Context context, String name) {
+        ArrayList<AlbumEntry> albums = new ArrayList<>();
+        String[] genreProjection = new String[]{
+                MediaStore.Audio.Albums._ID, // 0
+                MediaStore.Audio.Albums.ALBUM, // 1
+                MediaStore.Audio.Albums.ARTIST, // 1
+        };
+
+        String where = MediaStore.Audio.Albums.ARTIST + " = ?";
+        String[] whereVars = {name};
+        try (Cursor cursor = context.getContentResolver().query(
+                MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
+                genreProjection,
+                where,
+                whereVars,
+                MediaStore.Audio.Albums.ALBUM + " ASC"
+        )) {
+            int idColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums._ID);
+            int nameColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM);
+            int artistColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ARTIST);
+
+            while (cursor.moveToNext()) {
+                long id = cursor.getLong(idColumn);
+                String album = cursor.getString(nameColumn);
+                String artist = cursor.getString(artistColumn);
+                Uri contentUri = ContentUris.withAppendedId(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI, id);
+
+                albums.add(new AlbumEntry(album, artist, contentUri));
+            }
+        }
+
+        return albums;
+    }
 }

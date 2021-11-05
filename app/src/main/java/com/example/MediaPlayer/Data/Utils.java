@@ -47,7 +47,7 @@ public class Utils {
     public static Bitmap getThumbnail(Uri uri, Context context){
         Bitmap thumb = null;
         try {
-            thumb = context.getContentResolver().loadThumbnail(uri, new Size(200, 120), new CancellationSignal());
+            thumb = context.getContentResolver().loadThumbnail(uri, new Size(200, 200), new CancellationSignal());
         } catch (IOException e) {
             e.printStackTrace();
         }
