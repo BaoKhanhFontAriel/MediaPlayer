@@ -12,27 +12,35 @@ import android.widget.TextView;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.MediaPlayer.Activity.MainActivity;
 import com.example.MediaPlayer.Adapter.AlbumListAdapter;
 import com.example.MediaPlayer.Adapter.AlbumSongsListAdapter;
 import com.example.MediaPlayer.Adapter.BaseListAdapter;
 import com.example.MediaPlayer.Adapter.SongArtistAlbumListAdapter;
+import com.example.MediaPlayer.Data.AlbumEntry;
 import com.example.MediaPlayer.Data.AlbumRepository;
+import com.example.MediaPlayer.Data.MediaEntry;
 import com.example.MediaPlayer.Data.SongRepository;
 import com.example.MediaPlayer.R;
 import com.example.MediaPlayer.ViewModel.MediaPlayerViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+
 public class SongArtistFragment extends Fragment {
     private RecyclerView recyclerViewAlbum;
     private RecyclerView recyclerViewSong;
     private TextView artist;
+    private ArrayList<AlbumEntry> albumsList;
+    private ArrayList<MediaEntry> songsList;
     MediaPlayerViewModel mediaPlayerViewModel;
 
     @Override
@@ -51,14 +59,31 @@ public class SongArtistFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         initView(view);
+        initToolbar(view);
         setUpViewModel();
         initBackPressed();
+    }
+
+    public void getAlbums(String artistName){
+       albumsList = AlbumRepository.getInstance().filterArtist(getContext(), artistName);
+    }
+
+    public void getSongs(String artistName){
+        songsList = (ArrayList<MediaEntry>) SongRepository.getInstance().getFilteredAudio(getContext(),
+                MediaStore.Audio.Media.ARTIST, artistName);
     }
 
     private void initView(View view){
         recyclerViewAlbum = view.findViewById(R.id.recyclerView_album_artist_frag);
         recyclerViewSong = view.findViewById(R.id.recyclerView_song_artist_frag);
         artist = view.findViewById(R.id.artist_artist_frag);
+    }
+
+    private void initToolbar(View view){
+        Toolbar toolbar =  view.findViewById(R.id.toolbar_song_artist_layout);
+        ((MainActivity)getActivity()).setSupportActionBar(toolbar);
+        ((MainActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((MainActivity)getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.back_button);
     }
 
     private void setUpViewModel(){
@@ -68,15 +93,17 @@ public class SongArtistFragment extends Fragment {
             @Override
             public void onChanged(String artistName) {
                 artist.setText(artistName);
-                initAlbumRecyclerView(artistName);
-                initSongRecyclerView(artistName);
+                getAlbums(artistName);
+                getSongs(artistName);
+                initAlbumRecyclerView();
+                initSongRecyclerView();
             }
         });
     }
 
-    private void initAlbumRecyclerView(String artistName){
+    private void initAlbumRecyclerView(){
         SongArtistAlbumListAdapter albumListAdapter = new SongArtistAlbumListAdapter(
-                AlbumRepository.getInstance().filterArtist(getContext(), artistName),
+                albumsList,
                 albumClicked,
                 getContext());
 
@@ -85,9 +112,9 @@ public class SongArtistFragment extends Fragment {
         recyclerViewAlbum.setLayoutManager(linearLayoutManager);
     }
 
-    private void  initSongRecyclerView(String artistName){
+    private void  initSongRecyclerView(){
         AlbumSongsListAdapter albumSongsListAdapter = new AlbumSongsListAdapter(
-                SongRepository.getInstance().getFilteredAudio(getContext(), MediaStore.Audio.Media.ARTIST, artistName),
+                songsList,
                 songClicked,
                 getContext());
         recyclerViewSong.setAdapter(albumSongsListAdapter);
@@ -105,18 +132,16 @@ public class SongArtistFragment extends Fragment {
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
     }
 
-    BaseListAdapter.IEntryClicked albumClicked = new BaseListAdapter.IEntryClicked() {
-        @Override
-        public void onItemClicked(int position) {
-
-        }
+    BaseListAdapter.IEntryClicked albumClicked = position -> {
+        mediaPlayerViewModel.getAlbumEntryMutableLiveData().setValue(albumsList.get(position));
+        ((MainLayoutFragment) getParentFragment()).showAlbumSongsFragment();
     };
 
-    BaseListAdapter.IEntryClicked songClicked = new BaseListAdapter.IEntryClicked() {
-        @Override
-        public void onItemClicked(int position) {
-
-        }
+    BaseListAdapter.IEntryClicked songClicked = position -> {
+        mediaPlayerViewModel.getCurrentPlaylist().setValue(songsList);
+        mediaPlayerViewModel.getCurrentIndex().setValue(position);
+        mediaPlayerViewModel.getIsSong().setValue(true);
+        ((MainActivity)getActivity()).showSongPlayerFragment();
     };
 
     @Override
@@ -127,5 +152,6 @@ public class SongArtistFragment extends Fragment {
         }
         return true;
     }
+
 
 }

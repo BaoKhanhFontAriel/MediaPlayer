@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.MediaPlayer.Activity.MainActivity;
 import com.example.MediaPlayer.Adapter.BaseListAdapter;
 import com.example.MediaPlayer.Adapter.GenreListAdapter;
+import com.example.MediaPlayer.Data.GenreEntry;
 import com.example.MediaPlayer.Data.GenreRepository;
 import com.example.MediaPlayer.R;
 import com.example.MediaPlayer.ViewModel.MediaPlayerViewModel;
@@ -69,7 +70,9 @@ public class GenreTabFragment extends Fragment {
     }
 
     BaseListAdapter.IEntryClicked clicked = position -> {
-        mediaPlayerViewModel.getGenreSongEntryMutableLiveData().setValue(GenreRepository.getInstance().getGenreList().get(position).getSongs_within());
+        GenreEntry entry = GenreRepository.getInstance().getGenreList().get(position);
+        
+        mediaPlayerViewModel.getGenreSongEntryMutableLiveData().setValue(entry.getSongs_within());
         ((MainLayoutFragment) getParentFragment().getParentFragment()).hideNavigationBar();
         ((MainLayoutFragment) getParentFragment().getParentFragment()).showGenreSongsFragment();
     };

@@ -85,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
         registerReceiver(broadcastReceiver, intentFilter);
 
         setUpMainAppLayout();
-//        hideBackButton();
         handler.post(makeFolderTree);
 
         setUpViewModel();
@@ -526,6 +525,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         Log.d(TAG, "onStop: ");
         super.onStop();
-        saveHistory();
+//        saveHistory();
     }
 }

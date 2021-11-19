@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.MediaPlayer.Activity.MainActivity;
 import com.example.MediaPlayer.Adapter.BaseListAdapter;
 import com.example.MediaPlayer.Adapter.TrackListAdapter;
+import com.example.MediaPlayer.Data.GenreEntry;
 import com.example.MediaPlayer.Data.MediaEntry;
 import com.example.MediaPlayer.R;
 import com.example.MediaPlayer.ViewModel.MediaPlayerViewModel;
@@ -31,6 +32,7 @@ import java.util.List;
 public class GenrePlaylistFragment extends Fragment {
     private static final  String TAG = "GenrePlaylistFragment";
     private RecyclerView recyclerView;
+    private ArrayList<MediaEntry> songList;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -39,21 +41,9 @@ public class GenrePlaylistFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.genre_playlist_toolbar);
-        ((MainActivity)getActivity()).setSupportActionBar(toolbar);
-        ((MainActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((MainActivity)getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.back_button);
+        initToolbar(view);
         recyclerView = view.findViewById(R.id.playlist_recycler);
-
-        MediaPlayerViewModel mediaPlayerViewModel = new ViewModelProvider(requireActivity()).get(MediaPlayerViewModel.class);
-        mediaPlayerViewModel.getGenreSongEntryMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<MediaEntry>>() {
-            @Override
-            public void onChanged(List<MediaEntry> mediaEntries) {
-                TrackListAdapter trackListAdapter = new TrackListAdapter((ArrayList<MediaEntry>) mediaEntries, callback, getContext());
-                recyclerView.setAdapter(trackListAdapter);
-                recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
-            }
-        });
+        initViewModel();
 
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
@@ -64,11 +54,34 @@ public class GenrePlaylistFragment extends Fragment {
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
     }
+    private void initToolbar(View view){
+        Toolbar toolbar = view.findViewById(R.id.genre_playlist_toolbar);
+        ((MainActivity)getActivity()).setSupportActionBar(toolbar);
+        ((MainActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((MainActivity)getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.back_button);
+    }
+
+    private MediaPlayerViewModel mediaPlayerViewModel;
+    public void initViewModel(){
+        mediaPlayerViewModel = new ViewModelProvider(requireActivity()).get(MediaPlayerViewModel.class);
+        mediaPlayerViewModel.getGenreSongEntryMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<MediaEntry>>() {
+            @Override
+            public void onChanged(List<MediaEntry> mediaEntries) {
+                songList = (ArrayList<MediaEntry>) mediaEntries;
+                TrackListAdapter trackListAdapter = new TrackListAdapter(songList, callback, getContext());
+                recyclerView.setAdapter(trackListAdapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
+            }
+        });
+    }
 
     BaseListAdapter.IEntryClicked callback = new BaseListAdapter.IEntryClicked() {
         @Override
         public void onItemClicked(int position) {
-
+            mediaPlayerViewModel.getCurrentPlaylist().setValue(songList);
+            mediaPlayerViewModel.getCurrentIndex().setValue(position);
+            mediaPlayerViewModel.getIsSong().setValue(true);
+            ((MainActivity) getActivity()).showSongPlayerFragment();
         }
     };
 

@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@color/cardview_dark_background">
 
     <androidx.appcompat.widget.Toolbar
@@ -16,12 +16,12 @@
 
     <ImageView
         android:id="@+id/album_thumbnail"
-        android:layout_width="417dp"
-        android:layout_height="204dp"
+        android:layout_width="419dp"
+        android:layout_height="245dp"
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/album_toolbar"
+        app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
@@ -94,15 +94,15 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview_album"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="16dp"
+        android:nestedScrollingEnabled="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/song_name_album"
-        app:layout_constraintVertical_bias="0.0"
-        android:nestedScrollingEnabled="false"/>
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/album_artist_name"

@@ -16,7 +16,7 @@ public class TrackListAdapter extends BaseListAdapter {
     public TrackListAdapter(ArrayList<MediaEntry> audioEntries, IEntryClicked callback, Context context) {
         super(callback, context);
         this.audioList = audioEntries;
-        setLayoutId(R.layout.video_entry_ui);
+        setLayoutId(R.layout.song_entry_ui);
         setTitleId(R.id.media_name_mini_song_player);
         setDetailId(R.id.artist_and_duration);
         setThumbnailId(R.id.thumbnail);
